@@ -1,0 +1,31 @@
+site_name: Point Cloud Operations
+site_url: ""
+
+theme:
+  name: "material"
+
+extra_css:
+  - extra.css
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+          paths:
+            - src
+nav:
+  - Home: index.md
+  - API Reference:
+      - SamplingMesh: sample_mesh.md
+      - SamplingPC: sample.md
+      - Coordinate: coord.md
+      - Normal: norm.md
+      - Color: color.md
+      - Noise: noise.md
+      - Tensor: tensor.md
+  - About: about.md

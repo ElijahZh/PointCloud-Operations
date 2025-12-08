@@ -1,0 +1,54 @@
+/* Hide the __call__ entry from the right-hand TOC */
+.md-nav--secondary .md-nav__link[href$=".__call__"] {
+  display: none;
+}
+
+/* Make the main grid span the full browser width and hug the left edge */
+.md-grid {
+  max-width: 90%;
+  /*margin: 0;            !* remove auto-centering *!*/
+}
+
+.md-typeset h2#farthest_point_sample, .md-typeset h2#area_and_normal, .md-typeset h2#sample_points_with_normal_features{
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.md-typeset h2#normalizecoord, h2#positiveshift,h2#centershift, h2#randomshift,
+h2#randomrotate, h2#randomscale, h2#randomtranslate, h2#randomjitter, h2#randomflip, h2#randomdropout
+h2#shufflepoint, h2#pointclip, h2#clipgaussianjitter, h2#elasticdistortion{
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.md-typeset h2#normalizenormal{
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.md-typeset h2#normalizecolor, h2#chromaticautocontrast, h2#chromaticautocontrastpercent, h2#chromatictranslation,
+h2#chromaticjitter, h2#randomcolorgrayscale, h2#randomcolorjitter, h2#huesaturationtranslation, #randomcoloraugment{
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.md-typeset h2#sampling, h2#samplingdynamic, h2#spherecrop, h2#gridsample{
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.md-typeset h2#addoutlier, h2#addbackgroundnoise, h2#addnoise{
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.md-typeset h2#totensor, h2#finalfeatures{
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+
+/* Make all mkdocstrings method (__call__(dict)) headings slightly smaller */
+.md-typeset .doc.doc-object.doc-function > .doc-heading {
+  font-size: .95rem;
+}
