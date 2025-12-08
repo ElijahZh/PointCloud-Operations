@@ -1,0 +1,1435 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../sample/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>SamplingMesh - Point Cloud Operations</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#farthest_point_sample" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Point Cloud Operations" class="md-header__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Point Cloud Operations
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              SamplingMesh
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Point Cloud Operations" class="md-nav__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Point Cloud Operations
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingMesh
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingMesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#farthest_point_sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        farthest_point_sample
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#area_and_normal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        area_and_normal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample_points_with_normal_features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sample_points_with_normal_features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../norm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Normal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../color/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Color
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#farthest_point_sample" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        farthest_point_sample
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#area_and_normal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        area_and_normal
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sample_points_with_normal_features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        sample_points_with_normal_features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#process_file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        process_file
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>SamplingMesh</h1>
+
+<p>Functions to sample point cloud from the mesh</p>
+<h2 id="farthest_point_sample">farthest_point_sample</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+    <div class="doc doc-contents first">
+
+        <p>Select points using Farthest Point Sampling (FPS).</p>
+<p>This function selects <code>npoint</code> indices from an input point cloud such that
+each newly selected point is as far as possible (in Euclidean distance)
+from the already selected set. Only the first three dimensions of
+<code>point</code> are used as XYZ coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>point</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>np.ndarray
+Point cloud array of shape (N, D). Only the first three columns
+are interpreted as XYZ coordinates, so D must be at least 3.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>npoint</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>np.ndarray
+Number of points to sample. Must satisfy 1 &lt;= npoint &lt;= N.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>np.ndarray:
+Array of shape (npoint,) containing the indices of the
+sampled points (dtype int32).</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="AssertionError">AssertionError</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If <code>npoint</code> is greater than the number of input points N.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span>
+<span class="normal">168</span>
+<span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span>
+<span class="normal">172</span>
+<span class="normal">173</span>
+<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">farthest_point_sample</span><span class="p">(</span><span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">npoint</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Select points using Farthest Point Sampling (FPS).</span>
+
+<span class="sd">    This function selects `npoint` indices from an input point cloud such that</span>
+<span class="sd">    each newly selected point is as far as possible (in Euclidean distance)</span>
+<span class="sd">    from the already selected set. Only the first three dimensions of</span>
+<span class="sd">    `point` are used as XYZ coordinates.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        point: np.ndarray</span>
+<span class="sd">            Point cloud array of shape (N, D). Only the first three columns</span>
+<span class="sd">            are interpreted as XYZ coordinates, so D must be at least 3.</span>
+<span class="sd">        npoint: np.ndarray</span>
+<span class="sd">            Number of points to sample. Must satisfy 1 &lt;= npoint &lt;= N.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        np.ndarray:</span>
+<span class="sd">            Array of shape (npoint,) containing the indices of the</span>
+<span class="sd">            sampled points (dtype int32).</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        AssertionError: If `npoint` is greater than the number of input points N.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">N</span><span class="p">,</span> <span class="n">D</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">assert</span> <span class="n">N</span> <span class="o">&gt;=</span> <span class="n">npoint</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">point</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">centroids</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">npoint</span><span class="p">,))</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,))</span> <span class="o">*</span> <span class="mf">1e10</span>
+    <span class="n">farthest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">npoint</span><span class="p">):</span>
+        <span class="n">centroids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">farthest</span>
+        <span class="n">centroid</span> <span class="o">=</span> <span class="n">xyz</span><span class="p">[</span><span class="n">farthest</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">xyz</span> <span class="o">-</span> <span class="n">centroid</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">dist</span> <span class="o">&lt;</span> <span class="n">distance</span>
+        <span class="n">distance</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+        <span class="n">farthest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">centroids</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><p><a href="https://github.com/USERNAME/REPO_NAME/blob/main/path/to/sampling.py#L10-L45">View source on GitHub</a></p>
+<h2 id="area_and_normal">area_and_normal</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+    <div class="doc doc-contents first">
+
+        <p>Compute per-face normals and areas for a triangular mesh.</p>
+<p>Given mesh vertices and triangular faces, this function computes the
+outward face normals (unit vectors) and the corresponding face areas.
+Faces with zero area (degenerate triangles) receive a zero normal.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>vertices</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>np.ndarray
+Array of shape (N, 3) containing vertex coordinates (XYZ).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>faces</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>np.ndarray
+Array of shape (M, 3) containing vertex indices for each
+triangular face. Each row is a triplet of integer indices into <code>vertices</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="numpy.ndarray">ndarray</span>, <span title="numpy.ndarray">ndarray</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>tuple[np.ndarray, np.ndarray]:
+- face_normals: Array of shape (M, 3) with unit normal vectors
+  for each face. Degenerate faces have a zero vector.
+- face_areas: Array of shape (M,) with the area of each face.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">area_and_normal</span><span class="p">(</span><span class="n">vertices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">faces</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute per-face normals and areas for a triangular mesh.</span>
+
+<span class="sd">    Given mesh vertices and triangular faces, this function computes the</span>
+<span class="sd">    outward face normals (unit vectors) and the corresponding face areas.</span>
+<span class="sd">    Faces with zero area (degenerate triangles) receive a zero normal.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vertices: np.ndarray</span>
+<span class="sd">            Array of shape (N, 3) containing vertex coordinates (XYZ).</span>
+<span class="sd">        faces: np.ndarray</span>
+<span class="sd">            Array of shape (M, 3) containing vertex indices for each</span>
+<span class="sd">            triangular face. Each row is a triplet of integer indices into ``vertices``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple[np.ndarray, np.ndarray]:</span>
+<span class="sd">            - face_normals: Array of shape (M, 3) with unit normal vectors</span>
+<span class="sd">              for each face. Degenerate faces have a zero vector.</span>
+<span class="sd">            - face_areas: Array of shape (M,) with the area of each face.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cross_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">vertices</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">-</span> <span class="n">vertices</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]],</span>
+                             <span class="n">vertices</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]]</span> <span class="o">-</span> <span class="n">vertices</span><span class="p">[</span><span class="n">faces</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]])</span>   <span class="c1"># [M, 3]</span>
+    <span class="n">cross_product_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">cross_product</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>        <span class="c1"># [M, ]</span>
+    <span class="n">cross_product_normal_broadcast</span> <span class="o">=</span> <span class="n">cross_product_normal</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>      <span class="c1"># [M, 1]</span>
+    <span class="c1"># if cross product normal is 0, the result is zero</span>
+    <span class="n">face_normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">cross_product</span><span class="p">,</span> <span class="n">cross_product_normal_broadcast</span><span class="p">,</span>
+                             <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">cross_product</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">cross_product_normal_broadcast</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>   <span class="c1"># [M ,3]</span>
+    <span class="n">face_areas</span> <span class="o">=</span> <span class="n">cross_product_normal</span> <span class="o">*</span> <span class="mf">0.5</span>   <span class="c1"># [M, ]</span>
+    <span class="k">return</span> <span class="n">face_normals</span><span class="p">,</span> <span class="n">face_areas</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h2 id="sample_points_with_normal_features">sample_points_with_normal_features</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+    <div class="doc doc-contents first">
+
+        <p>Sample points on a mesh surface with associated face normals.</p>
+<p>Points are sampled on the triangular mesh defined by <code>vertices</code> and
+<code>faces</code>. Triangles are chosen with probability proportional to their
+surface area, and points are sampled uniformly within each selected
+triangle using random barycentric coordinates. The function returns
+both the sampled 3D points and the corresponding per-point normals,
+taken from the face normals.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>vertices</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Array of shape (V, 3) containing the mesh vertex
+coordinates (XYZ).</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>faces</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Array of shape (F, 3) containing vertex indices for each
+triangular face. Each row is a triplet of integer indices into
+<code>vertices</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>face_normals</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Array of shape (F, 3) with the normal vector for
+each face, typically unit-length.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>face_areas</code>
+            </td>
+            <td>
+                  <code><span title="numpy.ndarray">ndarray</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Array of shape (F,) with the area of each face.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>n_points</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of points to sample on the mesh surface.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="numpy.ndarray">ndarray</span>, <span title="numpy.ndarray">ndarray</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>tuple[np.ndarray, np.ndarray]:
+- sampled_points: Array of shape (n_points, 3) with the sampled
+  XYZ coordinates on the mesh surface.
+- sampled_normals: Array of shape (n_points, 3) with the
+  corresponding normal vectors (one per sampled point), copied
+  from the selected face normals.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\utils.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample_points_with_normal_features</span><span class="p">(</span><span class="n">vertices</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">faces</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">face_normals</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
+                                       <span class="n">face_areas</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample points on a mesh surface with associated face normals.</span>
+
+<span class="sd">        Points are sampled on the triangular mesh defined by ``vertices`` and</span>
+<span class="sd">        ``faces``. Triangles are chosen with probability proportional to their</span>
+<span class="sd">        surface area, and points are sampled uniformly within each selected</span>
+<span class="sd">        triangle using random barycentric coordinates. The function returns</span>
+<span class="sd">        both the sampled 3D points and the corresponding per-point normals,</span>
+<span class="sd">        taken from the face normals.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            vertices: Array of shape (V, 3) containing the mesh vertex</span>
+<span class="sd">                coordinates (XYZ).</span>
+<span class="sd">            faces: Array of shape (F, 3) containing vertex indices for each</span>
+<span class="sd">                triangular face. Each row is a triplet of integer indices into</span>
+<span class="sd">                ``vertices``.</span>
+<span class="sd">            face_normals: Array of shape (F, 3) with the normal vector for</span>
+<span class="sd">                each face, typically unit-length.</span>
+<span class="sd">            face_areas: Array of shape (F,) with the area of each face.</span>
+<span class="sd">            n_points: Number of points to sample on the mesh surface.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple[np.ndarray, np.ndarray]:</span>
+<span class="sd">                - sampled_points: Array of shape (n_points, 3) with the sampled</span>
+<span class="sd">                  XYZ coordinates on the mesh surface.</span>
+<span class="sd">                - sampled_normals: Array of shape (n_points, 3) with the</span>
+<span class="sd">                  corresponding normal vectors (one per sampled point), copied</span>
+<span class="sd">                  from the selected face normals.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    <span class="n">prob</span> <span class="o">=</span> <span class="n">face_areas</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">face_areas</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">faces</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">n_points</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">prob</span><span class="p">)</span>
+    <span class="n">sampled_faces</span> <span class="o">=</span> <span class="n">faces</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+    <span class="n">sampled_face_normals</span> <span class="o">=</span> <span class="n">face_normals</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>  <span class="c1"># [n_points, 3]</span>
+
+    <span class="n">sampled_points</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">sampled_face</span> <span class="ow">in</span> <span class="n">sampled_faces</span><span class="p">:</span>
+        <span class="n">v1_idx</span><span class="p">,</span> <span class="n">v2_idx</span><span class="p">,</span> <span class="n">v3_idx</span> <span class="o">=</span> <span class="n">sampled_face</span>
+        <span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="n">v3</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v1_idx</span><span class="p">],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v2_idx</span><span class="p">],</span> <span class="n">vertices</span><span class="p">[</span><span class="n">v3_idx</span><span class="p">]</span>
+        <span class="n">s</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(),</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()])</span>
+        <span class="n">f_v</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">s</span> <span class="o">*</span> <span class="n">v1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">v2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">v3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="n">sampled_points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f_v</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">f_v</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">f_v</span><span class="p">(</span><span class="mi">2</span><span class="p">)])</span>
+    <span class="n">sampled_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sampled_points</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sampled_points</span><span class="p">,</span> <span class="n">sampled_face_normals</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><h2 id="process_file">process_file</h2>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\create_pc.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
+<span class="normal">13</span>
+<span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
+<span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span>
+<span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">process_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">saved_folder</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_pts</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">10.0</span><span class="p">):</span>
+    <span class="n">file_id</span> <span class="o">=</span> <span class="s2">&quot;tmp&quot;</span>
+    <span class="n">saved_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">saved_folder</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_id</span><span class="si">}</span><span class="s2">.pth&quot;</span><span class="p">)</span>
+    <span class="n">ms</span> <span class="o">=</span> <span class="n">simple_clean</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">ms</span><span class="o">.</span><span class="n">apply_filter</span><span class="p">(</span><span class="s2">&quot;compute_matrix_from_scaling_or_normalization&quot;</span><span class="p">,</span>
+                    <span class="n">uniformflag</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axisx</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">scale</span><span class="p">,</span> <span class="n">axisy</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">scale</span><span class="p">,</span> <span class="n">axisz</span><span class="o">=</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scalecenter</span><span class="o">=</span><span class="s2">&quot;origin&quot;</span><span class="p">)</span>
+    <span class="n">ms</span><span class="o">.</span><span class="n">apply_filter</span><span class="p">(</span><span class="s2">&quot;apply_matrix_freeze&quot;</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">meshlab_to_open3d</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">orient_triangles</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">remove_unreferenced_vertices</span><span class="p">()</span>
+    <span class="c1"># center and rotate</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">move_to_center</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">middle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">degrees</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">degrees</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">rotate_data_3d</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">move_to_center</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">middle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">in_place</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">vertices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span>
+    <span class="n">faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">compute_vertex_normals</span><span class="p">()</span>
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">vertex_normals</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">compute_triangle_normals</span><span class="p">()</span>
+    <span class="n">face_normals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">triangle_normals</span><span class="p">)</span>
+    <span class="n">surface_area</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_surface_area</span><span class="p">()</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">face_areas</span> <span class="o">=</span> <span class="n">area_and_normal</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+
+
+    <span class="n">N</span> <span class="o">=</span> <span class="n">vertices</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">original_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">N</span> <span class="o">&lt;</span> <span class="n">n_pts</span><span class="p">:</span>
+        <span class="n">sampled_points</span><span class="p">,</span> <span class="n">sampled_face_normals</span> <span class="o">=</span> <span class="n">sample_points_with_normal_features</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">face_normals</span><span class="p">,</span> <span class="n">face_areas</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="n">n_pts</span> <span class="o">-</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">vertices</span><span class="p">,</span> <span class="n">sampled_points</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">normals</span><span class="p">,</span> <span class="n">sampled_face_normals</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">vertices</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">normals</span>
+    <span class="c1"># fps</span>
+    <span class="n">fps_index</span> <span class="o">=</span> <span class="n">farthest_point_sample</span><span class="p">(</span><span class="n">coord</span><span class="p">,</span> <span class="n">n_pts</span><span class="p">)</span>
+    <span class="n">norm</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">coord</span><span class="o">=</span><span class="n">coord</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">fps_index</span><span class="o">=</span><span class="n">fps_index</span><span class="p">,</span> <span class="n">original_index</span><span class="o">=</span><span class="n">original_index</span><span class="p">,</span> <span class="n">area</span><span class="o">=</span><span class="n">surface_area</span><span class="p">)</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div><p><strong>Extract PC from Mesh</strong></p>
+<p align="center">
+  <img src="../img/CreatePC1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/CreatePC2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

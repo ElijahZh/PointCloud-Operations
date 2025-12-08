@@ -1,0 +1,1737 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../color/">
+      
+      
+        <link rel="next" href="../tensor/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Noise - Point Cloud Operations</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#addoutlier" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Point Cloud Operations" class="md-header__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Point Cloud Operations
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Noise
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Point Cloud Operations" class="md-nav__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Point Cloud Operations
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample_mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingMesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../coord/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../norm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Normal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../color/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Color
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#addoutlier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddOutlier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddOutlier.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addbackgroundnoise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddBackgroundNoise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddBackgroundNoise.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addnoise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddNoise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddNoise.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#addoutlier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddOutlier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddOutlier.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addbackgroundnoise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddBackgroundNoise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddBackgroundNoise.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#addnoise" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AddNoise
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.AddNoise.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Noise</h1>
+
+<!-- ## Noise -->
+
+<p>Classes for adding noise into point cloud</p>
+<h2 id="addoutlier">AddOutlier</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Add synthetic outlier points (and attributes) around a point cloud.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally <code>"norm"</code>: per-point normals of shape (N, 3).</li>
+<li>Optionally <code>"color"</code>: per-point colors of shape (N, C).</li>
+<li>Optionally <code>"noise_index"</code>: 1D array of length N indicating noise labels (existing noise index).</li>
+</ul>
+<p>It augments the point cloud by sampling additional points in a spherical shell around the existing point cloud
+and appends them (and their attributes) to the existing arrays.</p>
+<p>The N number of outliers is:</p>
+<pre><code>N = int(max_ratio * n_pts)
+</code></pre>
+<p>where <code>n_pts</code> is the original number of points. If this is 0, the transform
+does nothing.</p>
+<p>Behavior of <code>fixed</code>:</p>
+<ul>
+<li>If <code>fixed=False</code>:</li>
+<li>Use <strong>all</strong> <code>N</code> generated outliers.</li>
+<li>If <code>fixed=True</code>:</li>
+<li>
+<p>Randomly choose a subset of the outliers with size:</p>
+<pre><code>N_used ∼ Uniform{ N // 2, ..., N }
+</code></pre>
+<p>and only append this subset.</p>
+</li>
+</ul>
+<p>Outliers are sampled inside a spherical shell defined from the centroid
+and bounding radius:</p>
+<ol>
+<li>
+<p>Compute the centroid:</p>
+<p>center = mean(coord, axis=0)</p>
+</li>
+<li>
+<p>Compute the maximum radius from the centroid:</p>
+<p>r_max = max(||coord[i] - center||)</p>
+</li>
+<li>
+<p>Define a spherical shell with inner radius:</p>
+<p>r_min = radius_min * r_max</p>
+</li>
+</ol>
+<p>and outer radius:</p>
+<pre><code>   r_max_shell = r_max
+</code></pre>
+<ol>
+<li>Sample directions uniformly on the sphere and radii uniformly in <strong>volume</strong> within <code>[r_min, r_max_shell]</code>,
+   then map back to world coordinates.</li>
+</ol>
+<p>For each outlier point, a random unit normal is generated (if <code>"norm"</code> exists), and random colors are generated
+(if <code>"color"</code> exists).</p>
+<p>The <code>"noise_index"</code> field is updated as follows:</p>
+<ul>
+<li>If <code>"noise_index"</code> does not exist:</li>
+<li>A new array of length <code>N + N_used</code> is created, filled with 0 for original points and 3
+  (indication of outlier type noise) for new outliers.</li>
+<li>If <code>"noise_index"</code> exists:</li>
+<li>It is extended to length <code>N + N_used</code>, keeping existing values and setting all new entries to 3.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_ratio</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum ratio of outliers to original points. The N number of generated outliers is:</p>
+<pre><code>N = int(max_ratio * n_pts)
+</code></pre>
+<p>where n_pts is the original point count.
+Defaults to 0.2.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.2</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>fixed</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Controls whether to subsample the generated outliers:</p>
+<ul>
+<li>False → use all generated outliers (<code>N</code>).</li>
+<li>True → randomly select a subset of size between <code>N // 2</code> and <code>N</code> (inclusive).
+Defaults to False.</li>
+</ul>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>radius_min</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fraction of the maximum radius used as the inner radius of the sampling shell. The shell is defined as
+<code>[radius_min * r_max, r_max]</code>.
+Defaults to 0.5.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>range255</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether <code>"color"</code> values are in <code>[0, 255]</code>. If True, outlier colors are sampled as
+integers in <code>[0, 255]</code>. If False, they are sampled as floats in <code>[0, 1]</code>.
+Defaults to False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the adding outliers.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.AddOutlier.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add outlier points and update aligned per-point attributes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary containing <code>"coord"</code> and optionally <code>"norm"</code>, <code>"color"</code>, and <code>"noise_index"</code>.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with additional outlier points and updated attributes, if adding outliers is applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Adding Outlier Noise</strong></p>
+<p align="center">
+  <img src="../img/AddOutlier1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/AddOutlier2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="addbackgroundnoise">AddBackgroundNoise</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Add structured background noise patches around a point cloud.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally <code>"norm"</code>: per-point normals of shape (N, 3).</li>
+<li>Optionally <code>"color"</code>: per-point colors of shape (N, C).</li>
+<li>Optionally <code>"noise_index"</code>: 1D array of length N indicating noise labels (existing noise index).</li>
+</ul>
+<p>It generates several small 3D regions (up to <code>max_regions</code>), each containing up to <code>region_max_k</code> random points.
+These regions are anchored to the bounding box of the (non-noise) point cloud and then added as background clutter:</p>
+<pre><code>1. Compute the axis-aligned bounding box (AABB) from points with ``noise_index == 0`` (or all points if ``noise_index`` is absent).
+2. Sample up to ``max_regions`` random centers inside the box (with behavior controlled by ``mode``).
+3. For each region, sample points uniformly in a cube of side length ``region_size`` around the center.
+4. Snap one coordinate of each region to one face of the bounding box, so that noise patches lie on or around the box surface.
+5. Generate random unit normals for these noise points.
+6. Optionally subsample a random subset of regions/points when ``fixed=False``.
+7. Concatenate noise coordinates, normals, and colors (if present) to the existing arrays, and update ``noise_index`` to mark them asbackground noise (label 2).
+</code></pre>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_regions</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of noise regions to generate. Each region is a local cube of sampled noise points.
+Defaults to 8.</p>
+              </div>
+            </td>
+            <td>
+                  <code>8</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>region_max_k</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of points per region before optional subsampling. Total initial noise points are
+roughly <code>max_regions * region_max_k</code> before any reduction.
+Defaults to 128.</p>
+              </div>
+            </td>
+            <td>
+                  <code>128</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>region_size</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Side length of each cubic noise region. Points are sampled uniformly in a cube of side <code>region_size</code>
+centered at each region center.
+Defaults to 0.5.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.5</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>fixed</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Controls randomness and subsampling of the generated noise:
+* If <code>False</code>:
+  - Randomly choose a number of regions between 1 and <code>max_regions</code>.
+  - Flatten all noise points from those regions.
+  - Randomly select a subset of points, with size between roughly 1/8 of all region points and the full set.
+* If <code>True</code>:
+  - Use all <code>max_regions * region_max_k</code> points (no region or point subsampling).</p>
+<p>Defaults to False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>range255</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether color values are in the range <code>[0, 255]</code>. If True, noise colors are sampled as integers in
+<code>[0, 255]</code>. If False, noise colors are sampled as floats in <code>[0, 1]</code>.
+Defaults to False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>mode</code>
+            </td>
+            <td>
+                  <code>{<span title="outside">outside</span>, <span title="inside">inside</span>}</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Controls how the region
+centers are chosen relative to the bounding box:</p>
+<ul>
+<li><code>"inside"</code>:</li>
+<li>Region centers are chosen so that the entire noise cube (of side <code>region_size</code>) lies strictly inside the bounding
+    box, as much as possible. This ensures all noise points stay on/within the box volume.</li>
+<li><code>"outside"</code>:</li>
+<li>Region centers are sampled anywhere inside the bounding box, and one coordinate of each region is snapped to a box face.
+    Some noise points may lie slightly outside the box, mimicking more realistic background clutter.</li>
+</ul>
+<p>Defaults to <code>"outside"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;outside&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the background
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.AddBackgroundNoise.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Add background noise regions and update aligned per-point attributes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary containing at least <code>"coord"</code>. May also contain <code>"norm"</code>, <code>"color"</code>, and <code>"noise_index"</code>.
+Any existing <code>"noise_index" &gt; 0</code> points are excluded when computing the bounding box used to place new regions.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with added background noise points (coords, normals, colors if present) and an updated</p>
+              </div>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+<td></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p><code>"noise_index"</code> marking these new points with label 2.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Adding Background Noise</strong></p>
+<p align="center">
+  <img src="../img/AddBackgroundNoise1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/AddBackgroundNoise2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="addnoise">AddNoise</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Add local noise clusters around randomly chosen points.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally <code>"norm"</code>: per-point normals of shape (N, 3), required if
+  <code>method="custom"</code>.</li>
+<li>Optionally <code>"color"</code>: per-point colors of shape (N, C).</li>
+<li>Optionally <code>"noise_index"</code>: 1D array of length N indicating existing noise labels.</li>
+</ul>
+<p>The transform works by:</p>
+<ol>
+<li>
+<p>Selecting a subset of points as <strong>noise centers</strong>.
+   The number of centers is:</p>
+<p>noise_center_count = int(N * noise_size_ratio)</p>
+</li>
+</ol>
+<p>(clamped to <code>[1, N]</code>). If this is 0, no noise is added.
+2. For each center, generating up to <code>noise_max_k</code> noise points in its
+   local neighborhood (cluster), according to the chosen <code>method</code> and <code>boundary</code>.
+3. Optionally subsampling the generated noise when <code>fixed=False</code>.
+4. Mapping the local offsets to world coordinates and appending them (and their normals/colors) to the existing arrays.
+5. Updating <code>noise_index</code> to mark the new points as local noise (value 1).</p>
+<p>Noise generation is controlled by two knobs:</p>
+<ul>
+<li><code>method</code>: defines <em>how</em> offsets are sampled:<ul>
+<li><code>"uniform"</code>:</li>
+<li>If <code>boundary="sphere"</code>: sample directions uniformly and radii uniformly in volume within a ball of radius <code>ball_r</code>.</li>
+<li>If <code>boundary="cube"</code>: sample coordinates uniformly in <code>[low, high]^3</code>.</li>
+<li><code>"gaussian"</code>:</li>
+<li>If <code>boundary="sphere"</code>: Gaussian around the center, clamped to lie within a ball of radius <code>ball_r</code>.</li>
+<li>If <code>boundary="cube"</code>: Gaussian in a cube, then clipped to the interval <code>[low, high]</code> per axis.</li>
+<li><code>"custom"</code>:</li>
+<li>Requires a <code>"norm"</code> field.</li>
+<li>For each center, uses its normal as a base direction and applies directional + radial jitter (using <code>ball_r</code> as scale) to create
+    offsets in a “tube-like” pattern around the surface.</li>
+</ul>
+</li>
+<li><code>boundary</code>: defines the <em>shape</em> of the local region:<ul>
+<li><code>"sphere"</code>: offsets lie in or near a ball of radius <code>ball_r</code>.</li>
+<li><code>"cube"</code>: offsets lie in or near a cube with side approximately <code>high - low</code> (for uniform/gaussian).</li>
+</ul>
+</li>
+</ul>
+<p>Colors for noise points are derived from the center colors:</p>
+<ul>
+<li>For <code>"uniform"</code> and <code>"gaussian"</code> methods:</li>
+<li>Noise points inherit exactly the color of their center.</li>
+<li>For <code>"custom"</code>:</li>
+<li>Optionally add Gaussian jitter in color space (scale depends on whether <code>range255</code> is True or False),
+  then clip to valid range.</li>
+</ul>
+<p>The number of <strong>final</strong> noise points is controlled by <code>fixed</code>:</p>
+<ul>
+<li>If <code>fixed=True</code>:</li>
+<li>Use all generated noise: <code>noise_center_count * noise_max_k</code> points.</li>
+<li>If <code>fixed=False</code>:</li>
+<li>Randomly shuffle all noise points and keep a random subset of size
+    between approximately one-eighth and the full generated count.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>noise_size_ratio</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Fraction of non-noise points to use as noise centers. The number of centers is:</p>
+<pre><code>noise_center_count = int(N * noise_size_ratio)
+</code></pre>
+<p>Defaults to 1./64.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0 / 64</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>noise_max_k</code>
+            </td>
+            <td>
+                  <code><span title="int">int</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum number of noise points generated per center before optional subsampling.
+Defaults to 16.</p>
+              </div>
+            </td>
+            <td>
+                  <code>16</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>fixed</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether to keep all generated noise points or randomly subsample them:</p>
+<ul>
+<li>True  → keep all <code>noise_center_count * noise_max_k</code> noise points.</li>
+<li>False → shuffle and randomly keep a subset of those points.</li>
+</ul>
+<p>Defaults to True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>method</code>
+            </td>
+            <td>
+                  <code>{<span title="uniform">uniform</span>, <span title="gaussian">gaussian</span>, <span title="custom">custom</span>}</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Noise sampling strategy. See above for details. <code>"custom"</code> requires
+<code>"norm"</code> in <code>data_dict</code>.
+Defaults to <code>"uniform"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;uniform&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>boundary</code>
+            </td>
+            <td>
+                  <code>{<span title="sphere">sphere</span>, <span title="cube">cube</span>}</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Shape of the local region in which noise is sampled. Interacts with <code>method</code> as described above.
+Defaults to <code>"sphere"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;sphere&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>low</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Lower bound for cube-based offsets (used for <code>boundary="cube"</code> in <code>"uniform"</code> and <code>"gaussian"</code>).
+Defaults to -0.1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>-0.1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>high</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Upper bound for cube-based offsets.
+Defaults to 0.1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>ball_r</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Radius of the spherical neighborhood for <code>boundary="sphere"</code> methods; also used as a scale for radial
+jitter in the <code>"custom"</code> method.
+Defaults to 0.1.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>range255</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Whether colors are stored in <code>[0, 255]</code> (integer-like). If True, color jitter in the <code>"custom"</code> method
+is done in that range. If False, colors are assumed in <code>[0, 1]</code>.
+Defaults to False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the noise
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.AddNoise.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply local noise cluster augmentation to a point cloud dictionary.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary containing at least <code>"coord"</code> (NumPy array of shape (N, 3)).
+May also contain <code>"norm"</code>, <code>"color"</code>, and <code>"noise_index"</code>. For <code>method="custom"</code>, <code>"norm"</code> must be present.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with additional noise points appended to the relevant per-point fields and an updated <code>"noise_index"</code> marking newly added noise points with label 1.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Adding Noise</strong></p>
+<p align="center">
+  <img src="../img/AddNoise1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/AddNoise2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>

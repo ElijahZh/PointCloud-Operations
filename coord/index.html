@@ -1,0 +1,3884 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../sample/">
+      
+      
+        <link rel="next" href="../norm/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Coordinate - Point Cloud Operations</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#normalizecoord" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Point Cloud Operations" class="md-header__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Point Cloud Operations
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Coordinate
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Point Cloud Operations" class="md-nav__button md-logo" aria-label="Point Cloud Operations" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Point Cloud Operations
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample_mesh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingMesh
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sample/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SamplingPC
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coordinate
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#normalizecoord" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NormalizeCoord
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.NormalizeCoord.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#positiveshift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PositiveShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.PositiveShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#centershift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CenterShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.CenterShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomshift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="__call__">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#randomrotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomRotate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomRotate.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomScale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomScale.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomtranslate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomTranslate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomTranslate.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomjitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomJitter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomJitter.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomflip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomFlip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomFlip.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomdropout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomDropout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomDropout.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shufflepoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShufflePoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ShufflePoint.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pointclip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PointClip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.PointClip.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clipgaussianjitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClipGaussianJitter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ClipGaussianJitter.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elasticdistortion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ElasticDistortion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ElasticDistortion.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../norm/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Normal
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../color/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Color
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../noise/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Noise
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tensor/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#normalizecoord" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NormalizeCoord
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.NormalizeCoord.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#positiveshift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PositiveShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.PositiveShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#centershift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CenterShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.CenterShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomshift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomShift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomShift.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="__call__">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#randomrotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomRotate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomRotate.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomscale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomScale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomScale.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomtranslate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomTranslate
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomTranslate.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomjitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomJitter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomJitter.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomflip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomFlip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomFlip.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#randomdropout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RandomDropout
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.RandomDropout.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shufflepoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ShufflePoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ShufflePoint.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pointclip" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PointClip
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.PointClip.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clipgaussianjitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ClipGaussianJitter
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ClipGaussianJitter.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#elasticdistortion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ElasticDistortion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#augmentation_class.ElasticDistortion.__call__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        __call__
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+  <h1>Coordinate</h1>
+
+<!-- ## Coordinate -->
+
+<p>Classes for point coordinates</p>
+<h2 id="normalizecoord">NormalizeCoord</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Normalizes the point cloud into a unit sphere, where the center is the mean of the point set.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.NormalizeCoord.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Normalizes point cloud coordinates into unit sphere.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that contains a "coord" key with a NumPy array of shape (N, 3) representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> normalized into a unit sphere.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Normalize PC into Unit Sphere Space</strong></p>
+<p align="center">
+  <img src="../img/NormalizeCoord1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/NormalizeCoord2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="positiveshift">PositiveShift</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Shift point coordinates so all values are non-negative.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.PositiveShift.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Moves points so that all coordinate values become non-negative.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a "coord" key
+with a NumPy array of shape (N, 3) representing point
+coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with "coord" shifted so all values are greater than or equal to zero.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Positive Shift PC</strong></p>
+<p align="center">
+  <img src="../img/PositiveShift1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/PositiveShift2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="centershift">CenterShift</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Translate point coordinates so they are centered around a reference point.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>It computes a shift vector and subtracts it from all coordinates in place.
+There are two ways to define the shift:</p>
+<ul>
+<li>Mean-based centering (<code>mean=True</code>):</li>
+<li>The shift is the mean (centroid) of all points along each axis.</li>
+<li>
+<p>If <code>apply_z</code> is False, the z-component of the shift is replaced by the minimum z value of the points, so:</p>
+<ul>
+<li>x and y are centered by their mean.</li>
+<li>z is shifted so that the lowest point lies at z = 0.</li>
+</ul>
+</li>
+<li>
+<p>Bounding-box centering (<code>mean=False</code>):</p>
+</li>
+<li>The shift is the center of the axis-aligned bounding box (AABB), i.e., the midpoint between min and max along each axis.</li>
+<li>If <code>apply_z</code> is False, the z-component of the shift is set to the minimum z value of the points, so the bottom of the bounding box is at z = 0.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>mean</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, use the mean of the coordinates as the
+shift (centroid). If False, use the center of the bounding box.
+Defaults to False.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_z</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, apply the same centering logic to
+the z-axis as x and y. If False, the z shift is always set to the
+minimum z value, so the lowest point (or bottom of the bounding
+box) sits at z = 0.
+Defaults to True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.CenterShift.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Center the point cloud coordinates in place.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3) representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> translated according to the centering strategy.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Center Shift PC</strong></p>
+<p align="center">
+  <img src="../img/CenterShift1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/CenterShift2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomshift">RandomShift</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly translate point coordinates along the x, y, and z axes.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>It samples a random shift for each axis from the corresponding interval in <code>shift</code> and adds it to all points in place.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>shift</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>], <span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>], <span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A tuple of three <code>(min, max)</code> pairs controlling the uniform sampling
+range of the shift per axis:</p>
+<ul>
+<li><code>shift[0]</code> → (x_min, x_max) for the x-axis shift.</li>
+<li><code>shift[1]</code> → (y_min, y_max) for the y-axis shift.</li>
+<li><code>shift[2]</code> → (z_min, z_max) for the z-axis shift.</li>
+</ul>
+<p>Each shift value is sampled from a uniform distribution:
+<code>np.random.uniform(min, max)</code>.</p>
+<p>With the default configuration:</p>
+<ul>
+<li>x ~ U(-0.02, 0.02)</li>
+<li>y ~ U(-0.02, 0.02)</li>
+<li>z ~ U( 0.02, 0.02)</li>
+</ul>
+<p>Defaults to <code>((-0.02, 0.02), (-0.02, 0.02), (0.02, 0.02))</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>((-0.02, 0.02), (-0.02, 0.02), (0.02, 0.02))</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the random shift.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomShift.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a random global shift to the point coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key
+with a NumPy array of shape (N, 3) representing point
+coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> translated by a random shift vector, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Shift PC</strong></p>
+<p align="center">
+  <img src="../img/RandomShift1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomShift2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h3 id="randomrotate">RandomRotate</h3>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly rotate 3D points (and optionally normals) around a given axis.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally <code>"norm"</code>: NumPy array of shape (N, 3) with normals associated with each point.</li>
+</ul>
+<p>The transform samples a rotation angle (in degrees) from <code>angle</code>, builds a rotation matrix around the specified axis,
+and applies it to the coordinates (and normals, if present). The rotation is applied around a center point:</p>
+<ul>
+<li>If <code>center</code> is <code>None</code>, the rotation center is taken as the center of the axis-aligned bounding box (AABB) of the coordinates.</li>
+<li>If <code>center</code> is provided, it is used directly as the rotation center.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>angle</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A <code>(min_deg, max_deg)</code> pair specifying the range of rotation angles in degrees. The actual angle is sampled
+uniformly from this interval and converted to radians internally. If <code>None</code> (default), it is set to
+<code>(-180, 180)</code>. For example, <code>angle=(-10, 10)</code> means a random
+rotation between -10° and +10°.
+Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>center</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>, <span title="float">float</span>] | <span title="numpy.ndarray">ndarray</span> | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Rotation center in 3D, given as a 3-element tuple or NumPy array
+<code>(cx, cy, cz)</code>. If <code>None</code> (default), the center of the bounding
+box of <code>data_dict["coord"]</code> is used:
+<code>center = ((x_min+x_max)/2, (y_min+y_max)/2, (z_min+z_max)/2)</code>.
+Defaults to None.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>axis</code>
+            </td>
+            <td>
+                  <code><span title="str">str</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Axis (or axes) around which the rotation is applied. One of <code>"x"</code>, <code>"y"</code>, <code>"z"</code>, or <code>"xyz"</code>.</p>
+<ul>
+<li><code>"x"</code>: single rotation around the x-axis.</li>
+<li><code>"y"</code>: single rotation around the y-axis.</li>
+<li><code>"z"</code>: single rotation around the z-axis.</li>
+<li><code>"xyz"</code>: three independent random rotations are sampled
+  (one for x, one for y, one for z), and the final rotation
+  matrix is computed as <code>R = R_z @ R_y @ R_x</code>.</li>
+</ul>
+<p>In all cases, angles are sampled (in degrees) from the same
+<code>angle</code> range.
+Defaults to <code>"y"</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>&#39;y&#39;</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the rotation.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomRotate.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a random rotation to coordinates (and normals, if present).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates. Optionally may contain <code>"norm"</code> with a NumPy array of shape (N, 3)
+representing normal vectors.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> rotated around the chosen center, and <code>"norm"</code> rotated if present.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Rotate PC</strong></p>
+<p align="center">
+  <img src="../img/RandomRotate1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomRotate2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomscale">RandomScale</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly scale 3D coordinates uniformly or per-axis.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>It samples a scale factor (or factors) from <code>scale</code> and multiplies the coordinates in place.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>scale</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="float">float</span>, <span title="float">float</span>] | <span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A <code>(min_scale, max_scale)</code> pair used as the uniform sampling range for the scale factor(s). Values are drawn from
+<code>np.random.uniform(min_scale, max_scale, size=...)</code>.</p>
+<p>Examples:
+    * <code>scale=(0.95, 1.05)</code> → small random resize around 1.0.
+    * <code>scale=(0.5, 1.5)</code> → more aggressive zoom in/out.</p>
+<p>Defaults to <code>(0.95, 1.05)</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>(0.95, 1.05)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>anisotropic</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Controls whether scaling is uniform or
+per-axis.</p>
+<ul>
+<li><code>False</code>: Sample a single scalar <code>s</code> and apply <code>coord *= s</code>.</li>
+<li><code>True</code>: Sample a 3D vector <code>[sx, sy, sz]</code> and apply
+  <code>coord *= [sx, sy, sz]</code>.</li>
+</ul>
+<p>Defaults to <code>False</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the random scaling.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomScale.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a random scaling to the point coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> scaled by a random factor (uniform or per-axis), if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Scale PC</strong></p>
+<p align="center">
+  <img src="../img/RandomScale1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomScale2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomtranslate">RandomTranslate</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly translate 3D coordinates by the same offset vector along x, y, z.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>It samples a translation vector <code>[tx, ty, tz]</code> from the given range and adds it to all coordinates in place.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>translate_range</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A <code>(min_translate, max_translate)</code> pair specifying the uniform sampling range for each axis.
+The translation vector is drawn as::</p>
+<p>translate = np.random.uniform(min_translate, max_translate, size=3)</p>
+<p>That is:</p>
+<ul>
+<li><code>tx ~ U(min_translate, max_translate)</code></li>
+<li><code>ty ~ U(min_translate, max_translate)</code></li>
+<li><code>tz ~ U(min_translate, max_translate)</code></li>
+</ul>
+<p>Defaults to <code>(-0.2, 0.2)</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>(-0.2, 0.2)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the translation.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomTranslate.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a random global translation to the point coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> translated by a random offset vector, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Translate PC</strong></p>
+<p align="center">
+  <img src="../img/RandomTranslate1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomTranslate2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomjitter">RandomJitter</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Add small Gaussian noise to 3D coordinates (point-wise jitter).</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>It samples Gaussian noise for each point and each axis, scales it by <code>sigma</code>, clips it to <code>[-clip, clip]</code>, and
+adds it to the coordinates in place.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>sigma</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Standard deviation of the Gaussian noise before clipping. Noise is drawn as:</p>
+<pre><code>jitter_raw ~ N(0, sigma^2)
+</code></pre>
+<p>per coordinate.
+Defaults to 0.01.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.01</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>clip</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum absolute value for the jitter. After sampling, the noise is clipped to the range <code>[-clip, clip]</code>:</p>
+<pre><code>jitter = np.clip(jitter_raw, -clip, clip)
+</code></pre>
+<p>Must be positive.
+Defaults to 0.05.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.05</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the jitter.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomJitter.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply point-wise Gaussian jitter to the point coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> perturbed by clipped Gaussian noise, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Jitter PC</strong></p>
+<p align="center">
+  <img src="../img/RandomJitter1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomJitter2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomflip">RandomFlip</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly flip point coordinates (and normals) by sign along selected axes.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally <code>"norm"</code>: NumPy array of shape (N, 3) with normals
+  associated with each point.</li>
+</ul>
+<p>Given the axes in <code>flip_axis</code>, each axis may be flipped by multiplying
+the corresponding coordinate (and normal, if present) by -1.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>flip_axis</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="int">int</span>, ...]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Indices of axes to consider for flipping. Each element must be in <code>{0, 1, 2}</code>:</p>
+<ul>
+<li><code>0</code> → x-axis</li>
+<li><code>1</code> → y-axis</li>
+<li><code>2</code> → z-axis</li>
+</ul>
+<p>For each axis in this tuple, a random decision is made (with
+probability <code>apply_p</code>) whether to flip that axis.</p>
+<p>Examples:
+    * <code>flip_axis=(0,)</code> → only possible flip is x-axis.
+    * <code>flip_axis=(1, 2)</code> → y and z axes may be flipped
+      independently.</p>
+<p>Defaults to <code>(0, 2)</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>(0, 2)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of flipping <strong>each</strong> axis.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomFlip.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply random sign flips along selected axes to coords (and normals).</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that should contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates. Optionally may contain a <code>"norm"</code> key with a NumPy array of shape (N, 3)
+representing normal vectors.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> (and <code>"norm"</code> if present) potentially flipped by sign along the
+specified axes.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Flip PC</strong></p>
+<p align="center">
+  <img src="../img/RandomFlip1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomFlip2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="randomdropout">RandomDropout</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly drop a subset of points (and aligned per-point attributes).</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally other per-point arrays (e.g., <code>"norm"</code>, <code>"color"</code>, <code>"label"</code>)
+  that have length N along the first dimension.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>max_dropout_ratio</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Maximum fraction of points that may be dropped. The actual dropout ratio is drawn from:</p>
+<pre><code>ratio ~ U(0, max_dropout_ratio)
+</code></pre>
+<p>For example, if <code>max_dropout_ratio = 0.2</code>, then up to 20% of
+points can be removed in any application of this transform.
+Defaults to 0.2.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.2</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the dropout.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.RandomDropout.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply random point dropout to coords and aligned attributes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3).
+Any other entry whose value is a NumPy array or <code>Sequence</code> of length N and whose key does not contain
+<code>"origin"</code> will also be subsampled.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with a subset of points (and aligned per-point attributes) kept, if dropout is applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Random Dropout PC</strong></p>
+<p align="center">
+  <img src="../img/RandomDropout1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/RandomDropout2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="shufflepoint">ShufflePoint</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly permute the order of points (and aligned per-point attributes).</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally other per-point arrays (e.g., <code>"norm"</code>, <code>"color"</code>, <code>"label"</code>) that have length N along the first dimension.</li>
+</ul>
+<p>All per-point arrays of matching length are shuffled with the same
+permutation, preserving correspondence between them.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the shuffling.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.ShufflePoint.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Shuffle the order of points and aligned per-point attributes.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3).
+Any other entry whose value is a NumPy array or <code>Sequence</code> of length N and whose key does not contain
+<code>"origin"</code> will be permuted with the same shuffle indices.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> and aligned per-point attributes shuffled in order, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><h2 id="pointclip">PointClip</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Randomly clip a local region around a randomly chosen point.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+<li>Optionally other per-point arrays (e.g., <code>"norm"</code>, <code>"color"</code>, <code>"label"</code>)
+  that have length N along the first dimension.</li>
+</ul>
+<p>A random point index is selected and its coordinate is used as the center:</p>
+<pre><code>center = coord[center_idx]
+</code></pre>
+<p>Then it builds either:</p>
+<ul>
+<li>a spherical region of radius <code>radius</code> around <code>center</code> if <code>use_sphere=True</code>, or</li>
+<li>an axis-aligned box centered at <code>center</code> with half-extent <code>box_range</code>
+  if <code>use_sphere=False</code>.</li>
+</ul>
+<p>Only points inside this region are kept; all others are dropped. All aligned per-point attributes are filtered with
+the same mask.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>use_sphere</code>
+            </td>
+            <td>
+                  <code><span title="bool">bool</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True, use a spherical region. For each point <code>p</code>, compute squared distance:</p>
+<pre><code>dist2 = ||p - center||^2
+</code></pre>
+<p>and keep points with <code>dist2 &lt;= radius^2</code>. If False, use an axis-aligned box instead.
+Defaults to True.</p>
+              </div>
+            </td>
+            <td>
+                  <code>True</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>radius</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Radius of the sphere used when <code>use_sphere=True</code>. The clipped region is:</p>
+<pre><code>{ p : ||p - center|| &lt;= radius }
+</code></pre>
+<p>Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>box_range</code>
+            </td>
+            <td>
+                  <code><span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>, <span title="float">float</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Half-extent of the axis-aligned box along each axis,
+used when <code>use_sphere=False</code>. Interpreted as <code>(rx, ry, rz)</code>. The box is defined as:</p>
+<ul>
+<li><code>x_min, y_min, z_min = center - box_range</code></li>
+<li><code>x_max, y_max, z_max = center + box_range</code></li>
+</ul>
+<p>A point <code>p = (x, y, z)</code> is kept if:</p>
+<pre><code>x_min &lt;= x &lt;= x_max
+y_min &lt;= y &lt;= y_max
+z_min &lt;= z &lt;= z_max
+</code></pre>
+<p>Defaults to <code>(0.0, 0.0, 0.0)</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>(0.0, 0.0, 0.0)</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the clipping.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.PointClip.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply a local region crop (sphere or box) around a random center.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3).
+Any other entry whose value is a NumPy array or <code>Sequence</code> of length N and whose key does not contain
+<code>"origin"</code> will also be masked.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> and aligned per-point attributes cropped to a local region, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Clip PC</strong></p>
+<p align="center">
+  <img src="../img/PointClip1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/PointClip2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="clipgaussianjitter">ClipGaussianJitter</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Add clipped multivariate Gaussian noise to 3D coordinates.</p>
+<p>This transform expects a dictionary containing:
+* <code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</p>
+<p>Unlike a simple per-axis jitter (RandomJitter) with independent 1D Gaussians, this transform uses a
+<strong>multivariate normal distribution</strong>, allowing you to encode correlations between axes via the covariance matrix.
+It samples 3D Gaussian noise from a multivariate normal, normalizes and clips it using a <code>quantile</code> parameter, scales
+it by <code>scalar</code>, and adds it to the coordinates in place.</p>
+<p>In the default setting:</p>
+<ul>
+<li><code>mean = [0.0, 0.0, 0.0]</code></li>
+<li><code>cov = I_3</code> (3×3 identity matrix → isotropic Gaussian)</li>
+</ul>
+<p>A raw sample is drawn as:</p>
+<pre><code>jitter_raw ~ N(mean, cov)
+</code></pre>
+<p>Then it is transformed as:</p>
+<pre><code>jitter = scalar * clip(jitter_raw / quantile, -1, 1)
+</code></pre>
+<p>Intuition:</p>
+<ul>
+<li>For a standard normal, most values lie within ±<code>quantile</code>
+  (e.g., 1.96 ≈ 97.5% quantile).</li>
+<li>Dividing by <code>quantile</code> and clipping to [-1, 1] effectively bounds
+  each component before scaling, so typical magnitudes are on the
+  order of <code>±scalar</code>.</li>
+</ul>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>quantile</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Normalization factor used before clipping. Noise is divided by <code>quantile</code> and then clipped to [-1, 1].
+For <code>quantile=1.96</code>, about 95–97.5% of standard normal samples fall in [-1.96, 1.96], so after dividing most
+samples lie in [-1, 1] before clipping.
+Increasing <code>quantile</code> makes the effective jitter slightly smaller; decreasing it makes it larger (and more aggressively clipped).
+Defaults to 1.96.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.96</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>scalar</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Overall scale factor for the jitter after clipping. Roughly controls the maximum perturbation per coordinate
+(since final values are typically in approximately<code>[-scalar, scalar]</code>).
+Defaults to 0.02.</p>
+              </div>
+            </td>
+            <td>
+                  <code>0.02</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the jitter.
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.ClipGaussianJitter.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply clipped multivariate Gaussian jitter to the point coordinates.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> perturbed by clipped multivariate Gaussian noise, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Clip Gaussian Jitter on PC</strong></p>
+<p align="center">
+  <img src="../img/ClipGaussianJitter1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/ClipGaussianJitter2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+<h2 id="elasticdistortion">ElasticDistortion</h2>
+
+
+<div class="doc doc-object doc-class">
+
+
+
+
+    <div class="doc doc-contents first">
+
+
+
+        <p>Apply elastic distortion to 3D point coordinates.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
+<p>The distortion is implemented by:</p>
+<ol>
+<li>Creating a coarse 3D grid of Gaussian noise with resolution determined
+   by <code>granularity</code>.</li>
+<li>Smoothing the noise with separable 3D convolutions.</li>
+<li>Trilinearly interpolating the smoothed noise at each input coordinate.</li>
+<li>Adding the interpolated noise (scaled by <code>magnitude</code>) to the original
+   coordinates.</li>
+</ol>
+<p>Multiple <code>(granularity, magnitude)</code> pairs can be applied sequentially to
+produce multi-scale elastic deformations.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>distortion_params</code>
+            </td>
+            <td>
+                  <code><span title="list">list</span>[<span title="list">list</span>[<span title="float">float</span>]] | <span title="list">list</span>[<span title="tuple">tuple</span>[<span title="float">float</span>, <span title="float">float</span>]] | None</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>List of <code>(granularity, magnitude)</code> pairs controlling the elastic fields to apply. Each pair is:</p>
+<ul>
+<li><code>granularity</code> (float):
+    Size of the noise grid in the same units as the coordinates (e.g., meters or centimeters).
+    Larger values → smoother, more global distortions.</li>
+<li><code>magnitude</code> (float):
+    Amplitude of the noise displacement added to the coordinates.</li>
+</ul>
+<p>If <code>None</code>, a default two-scale configuration is used: <code>[[0.2, 0.4], [0.8, 1.6]]</code>.
+Defaults to <code>None</code>.</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td>
+                <code>apply_p</code>
+            </td>
+            <td>
+                  <code><span title="float">float</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Probability of applying the elastic
+Defaults to 1.0.</p>
+              </div>
+            </td>
+            <td>
+                  <code>1.0</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+<h2 id="augmentation_class.ElasticDistortion.__call__" class="doc doc-heading">
+            <code class="highlight language-python"><span class="fm">__call__</span><span class="p">(</span><span class="n">data_dict</span><span class="p">)</span></code>
+
+</h2>
+
+
+    <div class="doc doc-contents ">
+
+        <p>Apply elastic distortion(s) to <code>"coord"</code> in <code>data_dict</code>.</p>
+
+
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                <code>data_dict</code>
+            </td>
+            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Input dictionary that must contain a <code>"coord"</code> key with a NumPy array of shape (N, 3)
+representing point coordinates.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+<th>Name</th>          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+<td><code>dict</code></td>            <td>
+                  <code><span title="dict">dict</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The same dictionary with <code>"coord"</code> distorted in place, if applied.</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    </div>
+
+</div>
+
+
+
+  </div>
+
+    </div>
+
+</div><p><strong>Elastic Distortion on PC</strong></p>
+<p align="center">
+  <img src="../img/ElasticDistortion1.png" alt="Before" style="width:48%; max-width:48%; height:auto; margin-right:1%;">
+  <img src="../img/ElasticDistortion2.png" alt="After" style="width:48%; max-width:48%; height:auto; margin-left:1%;">
+</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+    
+  </body>
+</html>
