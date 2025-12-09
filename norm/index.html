@@ -659,6 +659,51 @@
 
 
 
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src\augmentation_class.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NormalizeNormal</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize normal vectors to unit length for a point cloud.</span>
+
+<span class="sd">    This transform expects a dictionary containing:</span>
+<span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Normalizes normal vectors to unit length.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            data_dict (dict): Input dictionary that must contain a &quot;norm&quot; key</span>
+<span class="sd">                        with a NumPy array of shape (N, 3) representing normal vectors.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The same dictionary with &quot;norm&quot; normalized to unit length.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;norm&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="c1"># preprocess.normalize handles zero divisor</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">],</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
 
 
@@ -713,6 +758,37 @@ Args:
     </table>
 
 
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\augmentation_class.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalizes normal vectors to unit length.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict (dict): Input dictionary that must contain a &quot;norm&quot; key</span>
+<span class="sd">                    with a NumPy array of shape (N, 3) representing normal vectors.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The same dictionary with &quot;norm&quot; normalized to unit length.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;norm&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="c1"># preprocess.normalize handles zero divisor</span>
+        <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">preprocessing</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">],</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;l2&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>

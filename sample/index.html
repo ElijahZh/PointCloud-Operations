@@ -862,6 +862,157 @@ If <code>n_pts &gt;= N</code>, no subsampling is applied.</p>
 
 
 
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src\augmentation_class.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1897</span>
+<span class="normal">1898</span>
+<span class="normal">1899</span>
+<span class="normal">1900</span>
+<span class="normal">1901</span>
+<span class="normal">1902</span>
+<span class="normal">1903</span>
+<span class="normal">1904</span>
+<span class="normal">1905</span>
+<span class="normal">1906</span>
+<span class="normal">1907</span>
+<span class="normal">1908</span>
+<span class="normal">1909</span>
+<span class="normal">1910</span>
+<span class="normal">1911</span>
+<span class="normal">1912</span>
+<span class="normal">1913</span>
+<span class="normal">1914</span>
+<span class="normal">1915</span>
+<span class="normal">1916</span>
+<span class="normal">1917</span>
+<span class="normal">1918</span>
+<span class="normal">1919</span>
+<span class="normal">1920</span>
+<span class="normal">1921</span>
+<span class="normal">1922</span>
+<span class="normal">1923</span>
+<span class="normal">1924</span>
+<span class="normal">1925</span>
+<span class="normal">1926</span>
+<span class="normal">1927</span>
+<span class="normal">1928</span>
+<span class="normal">1929</span>
+<span class="normal">1930</span>
+<span class="normal">1931</span>
+<span class="normal">1932</span>
+<span class="normal">1933</span>
+<span class="normal">1934</span>
+<span class="normal">1935</span>
+<span class="normal">1936</span>
+<span class="normal">1937</span>
+<span class="normal">1938</span>
+<span class="normal">1939</span>
+<span class="normal">1940</span>
+<span class="normal">1941</span>
+<span class="normal">1942</span>
+<span class="normal">1943</span>
+<span class="normal">1944</span>
+<span class="normal">1945</span>
+<span class="normal">1946</span>
+<span class="normal">1947</span>
+<span class="normal">1948</span>
+<span class="normal">1949</span>
+<span class="normal">1950</span>
+<span class="normal">1951</span>
+<span class="normal">1952</span>
+<span class="normal">1953</span>
+<span class="normal">1954</span>
+<span class="normal">1955</span>
+<span class="normal">1956</span>
+<span class="normal">1957</span>
+<span class="normal">1958</span>
+<span class="normal">1959</span>
+<span class="normal">1960</span>
+<span class="normal">1961</span>
+<span class="normal">1962</span>
+<span class="normal">1963</span>
+<span class="normal">1964</span>
+<span class="normal">1965</span>
+<span class="normal">1966</span>
+<span class="normal">1967</span>
+<span class="normal">1968</span>
+<span class="normal">1969</span>
+<span class="normal">1970</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Sampling</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subsample points (and aligned attributes) using random or FPS-based indices.</span>
+
+<span class="sd">    This transform expects a dictionary containing:</span>
+
+<span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
+<span class="sd">    * Optionally other per-point arrays (e.g., `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`) that have length N along the first dimension.</span>
+<span class="sd">    * For FPS-based methods (`&quot;random_fps&quot;` and `&quot;fps&quot;`), a key `&quot;fps_index&quot;` is also required, containing a 1D array of</span>
+<span class="sd">      precomputed farthest-point-sampling indices into `&quot;coord&quot;`.</span>
+
+<span class="sd">    If the requested number of points `n_pts` is **less** than the current number of points `N`, it selects a subset of</span>
+<span class="sd">    indices and applies the same index selection to all aligned per-point fields (except keys containing `&quot;origin&quot;`).</span>
+<span class="sd">    If `n_pts &gt;= N`, no subsampling is applied.</span>
+
+<span class="sd">    The sampling strategy is controlled by `method`:</span>
+
+<span class="sd">    * `&quot;random&quot;`:</span>
+<span class="sd">      - Uniformly sample `n_pts` indices from `[0, N)` without replacement.</span>
+<span class="sd">    * `&quot;random_fps&quot;`:</span>
+<span class="sd">      - Sample `n_pts` indices from `fps_index` without replacement, then map the index to get the final subset.</span>
+<span class="sd">      (it is for better augmentation instead of fixed fps index each time despite not guarantee perfect uniform coverage)</span>
+<span class="sd">    * `&quot;fps&quot;`:</span>
+<span class="sd">      - Directly use the first `n_pts` entries from `data_dict[&quot;fps_index&quot;]`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        n_pts (int, optional):</span>
+<span class="sd">            Target number of points after sampling. If `n_pts &gt;= N`, no sampling is applied. Defaults to 1024.</span>
+<span class="sd">        method (str, optional):</span>
+<span class="sd">            Sampling strategy. One of:</span>
+
+<span class="sd">            * `&quot;random&quot;`: uniform random sampling.</span>
+<span class="sd">            * `&quot;random_fps&quot;`: random subset of precomputed FPS indices.</span>
+<span class="sd">            * `&quot;fps&quot;`: first `n_pts` precomputed FPS indices.</span>
+
+<span class="sd">            Defaults to `&quot;fps&quot;`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_pts</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;fps&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">=</span> <span class="n">n_pts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;random_fps&quot;</span><span class="p">,</span> <span class="s2">&quot;fps&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Subsample points and aligned fields according to the chosen method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_dict (dict): Input dictionary that must contain a `&quot;coord&quot;` key with a NumPy array of shape (N, 3).</span>
+<span class="sd">                Any other entry whose value is a NumPy array or `Sequence` of length N and whose key does not contain</span>
+<span class="sd">                `&quot;origin&quot;` will be permuted with the same shuffle indices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes subsampled to at most `n_pts` points, if applied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># print(data_dict.keys())</span>
+        <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random_fps&quot;</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fps&quot;</span><span class="p">:</span>
+                    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span>
+                    <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;method </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
 
 
@@ -946,6 +1097,73 @@ Any other entry whose value is a NumPy array or <code>Sequence</code> of length 
     </table>
 
 
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\augmentation_class.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1939</span>
+<span class="normal">1940</span>
+<span class="normal">1941</span>
+<span class="normal">1942</span>
+<span class="normal">1943</span>
+<span class="normal">1944</span>
+<span class="normal">1945</span>
+<span class="normal">1946</span>
+<span class="normal">1947</span>
+<span class="normal">1948</span>
+<span class="normal">1949</span>
+<span class="normal">1950</span>
+<span class="normal">1951</span>
+<span class="normal">1952</span>
+<span class="normal">1953</span>
+<span class="normal">1954</span>
+<span class="normal">1955</span>
+<span class="normal">1956</span>
+<span class="normal">1957</span>
+<span class="normal">1958</span>
+<span class="normal">1959</span>
+<span class="normal">1960</span>
+<span class="normal">1961</span>
+<span class="normal">1962</span>
+<span class="normal">1963</span>
+<span class="normal">1964</span>
+<span class="normal">1965</span>
+<span class="normal">1966</span>
+<span class="normal">1967</span>
+<span class="normal">1968</span>
+<span class="normal">1969</span>
+<span class="normal">1970</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Subsample points and aligned fields according to the chosen method.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict (dict): Input dictionary that must contain a `&quot;coord&quot;` key with a NumPy array of shape (N, 3).</span>
+<span class="sd">            Any other entry whose value is a NumPy array or `Sequence` of length N and whose key does not contain</span>
+<span class="sd">            `&quot;origin&quot;` will be permuted with the same shuffle indices.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes subsampled to at most `n_pts` points, if applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># print(data_dict.keys())</span>
+    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random_fps&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">]),</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;fps&quot;</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][:</span><span class="bp">self</span><span class="o">.</span><span class="n">n_pts</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;method </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2"> is not supported.&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
@@ -1052,6 +1270,139 @@ Defaults to <code>8192 / 1.8</code>.</p>
 
 
 
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src\augmentation_class.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1972</span>
+<span class="normal">1973</span>
+<span class="normal">1974</span>
+<span class="normal">1975</span>
+<span class="normal">1976</span>
+<span class="normal">1977</span>
+<span class="normal">1978</span>
+<span class="normal">1979</span>
+<span class="normal">1980</span>
+<span class="normal">1981</span>
+<span class="normal">1982</span>
+<span class="normal">1983</span>
+<span class="normal">1984</span>
+<span class="normal">1985</span>
+<span class="normal">1986</span>
+<span class="normal">1987</span>
+<span class="normal">1988</span>
+<span class="normal">1989</span>
+<span class="normal">1990</span>
+<span class="normal">1991</span>
+<span class="normal">1992</span>
+<span class="normal">1993</span>
+<span class="normal">1994</span>
+<span class="normal">1995</span>
+<span class="normal">1996</span>
+<span class="normal">1997</span>
+<span class="normal">1998</span>
+<span class="normal">1999</span>
+<span class="normal">2000</span>
+<span class="normal">2001</span>
+<span class="normal">2002</span>
+<span class="normal">2003</span>
+<span class="normal">2004</span>
+<span class="normal">2005</span>
+<span class="normal">2006</span>
+<span class="normal">2007</span>
+<span class="normal">2008</span>
+<span class="normal">2009</span>
+<span class="normal">2010</span>
+<span class="normal">2011</span>
+<span class="normal">2012</span>
+<span class="normal">2013</span>
+<span class="normal">2014</span>
+<span class="normal">2015</span>
+<span class="normal">2016</span>
+<span class="normal">2017</span>
+<span class="normal">2018</span>
+<span class="normal">2019</span>
+<span class="normal">2020</span>
+<span class="normal">2021</span>
+<span class="normal">2022</span>
+<span class="normal">2023</span>
+<span class="normal">2024</span>
+<span class="normal">2025</span>
+<span class="normal">2026</span>
+<span class="normal">2027</span>
+<span class="normal">2028</span>
+<span class="normal">2029</span>
+<span class="normal">2030</span>
+<span class="normal">2031</span>
+<span class="normal">2032</span>
+<span class="normal">2033</span>
+<span class="normal">2034</span>
+<span class="normal">2035</span>
+<span class="normal">2036</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SamplingDynamic</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dynamically choose the number of sampled points based on a scalar attribute.</span>
+
+<span class="sd">    This transform expects a dictionary containing:</span>
+
+<span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
+<span class="sd">    * Optionally other per-point arrays (e.g., `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`) that have length N along the first dimension.</span>
+<span class="sd">    * `&quot;fps_index&quot;`: 1D NumPy array of precomputed farthest-point-sampling indices into `&quot;coord&quot;`.</span>
+<span class="sd">    * A scalar entry `key` (default `&quot;area&quot;`) used to determine how many points to sample.</span>
+
+<span class="sd">    The number of target points is computed as:</span>
+
+<span class="sd">        pts = int(data_dict[key] * pts_ratio)</span>
+
+<span class="sd">    Then, from `&quot;fps_index&quot;` it selects:</span>
+
+<span class="sd">    * The first `pts` indices if `len(fps_index) &gt; pts`, or</span>
+<span class="sd">    * All of `fps_index` otherwise.</span>
+
+<span class="sd">    All per-point arrays of length `N` (except those whose key contains `&quot;origin&quot;`) are then indexed with this subset.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (str, optional):</span>
+<span class="sd">            Name of the scalar field in `data_dict` used to determine the dynamic number of points. Common choices might</span>
+<span class="sd">            include `&quot;area&quot;`, `&quot;volume&quot;`, etc.</span>
+<span class="sd">            Defaults to `&quot;area&quot;`.</span>
+<span class="sd">        pts_ratio (float, optional):</span>
+<span class="sd">            Multiplicative factor that maps the scalar value `data_dict[key]` to a target number of points:</span>
+
+<span class="sd">                pts = int(data_dict[key] * pts_ratio)</span>
+
+<span class="sd">            For example, if `data_dict[&quot;area&quot;] = 1.8` and `pts_ratio` is `8192 / 1.8`, then `pts ≈ 8192`.</span>
+<span class="sd">            Defaults to `8192 / 1.8`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="s2">&quot;area&quot;</span><span class="p">,</span> <span class="n">pts_ratio</span><span class="o">=</span><span class="mi">8192</span><span class="o">/</span><span class="mf">1.8</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pts_ratio</span> <span class="o">=</span> <span class="n">pts_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply dynamic FPS-based subsampling to `&quot;coord&quot;` and aligned fields.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_dict (dict): Input dictionary containing at least `&quot;coord&quot;`, `self.key`, and `&quot;fps_index&quot;`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes subsampled according to the</span>
+<span class="sd">            dynamically chosen number of points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="ow">in</span> <span class="n">data_dict</span>
+            <span class="k">assert</span> <span class="s2">&quot;fps_index&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span>
+
+            <span class="n">pts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pts_ratio</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">pts</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][:</span><span class="n">pts</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">]</span>
+
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
 
 
@@ -1144,6 +1495,61 @@ Defaults to <code>8192 / 1.8</code>.</p>
     </table>
 
 
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\augmentation_class.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2011</span>
+<span class="normal">2012</span>
+<span class="normal">2013</span>
+<span class="normal">2014</span>
+<span class="normal">2015</span>
+<span class="normal">2016</span>
+<span class="normal">2017</span>
+<span class="normal">2018</span>
+<span class="normal">2019</span>
+<span class="normal">2020</span>
+<span class="normal">2021</span>
+<span class="normal">2022</span>
+<span class="normal">2023</span>
+<span class="normal">2024</span>
+<span class="normal">2025</span>
+<span class="normal">2026</span>
+<span class="normal">2027</span>
+<span class="normal">2028</span>
+<span class="normal">2029</span>
+<span class="normal">2030</span>
+<span class="normal">2031</span>
+<span class="normal">2032</span>
+<span class="normal">2033</span>
+<span class="normal">2034</span>
+<span class="normal">2035</span>
+<span class="normal">2036</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply dynamic FPS-based subsampling to `&quot;coord&quot;` and aligned fields.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict (dict): Input dictionary containing at least `&quot;coord&quot;`, `self.key`, and `&quot;fps_index&quot;`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes subsampled according to the</span>
+<span class="sd">        dynamically chosen number of points.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="ow">in</span> <span class="n">data_dict</span>
+        <span class="k">assert</span> <span class="s2">&quot;fps_index&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span>
+
+        <span class="n">pts</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pts_ratio</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="n">pts</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">][:</span><span class="n">pts</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;fps_index&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
@@ -1272,6 +1678,173 @@ Defaults to <code>None</code>.</p>
 
 
 
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src\augmentation_class.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1814</span>
+<span class="normal">1815</span>
+<span class="normal">1816</span>
+<span class="normal">1817</span>
+<span class="normal">1818</span>
+<span class="normal">1819</span>
+<span class="normal">1820</span>
+<span class="normal">1821</span>
+<span class="normal">1822</span>
+<span class="normal">1823</span>
+<span class="normal">1824</span>
+<span class="normal">1825</span>
+<span class="normal">1826</span>
+<span class="normal">1827</span>
+<span class="normal">1828</span>
+<span class="normal">1829</span>
+<span class="normal">1830</span>
+<span class="normal">1831</span>
+<span class="normal">1832</span>
+<span class="normal">1833</span>
+<span class="normal">1834</span>
+<span class="normal">1835</span>
+<span class="normal">1836</span>
+<span class="normal">1837</span>
+<span class="normal">1838</span>
+<span class="normal">1839</span>
+<span class="normal">1840</span>
+<span class="normal">1841</span>
+<span class="normal">1842</span>
+<span class="normal">1843</span>
+<span class="normal">1844</span>
+<span class="normal">1845</span>
+<span class="normal">1846</span>
+<span class="normal">1847</span>
+<span class="normal">1848</span>
+<span class="normal">1849</span>
+<span class="normal">1850</span>
+<span class="normal">1851</span>
+<span class="normal">1852</span>
+<span class="normal">1853</span>
+<span class="normal">1854</span>
+<span class="normal">1855</span>
+<span class="normal">1856</span>
+<span class="normal">1857</span>
+<span class="normal">1858</span>
+<span class="normal">1859</span>
+<span class="normal">1860</span>
+<span class="normal">1861</span>
+<span class="normal">1862</span>
+<span class="normal">1863</span>
+<span class="normal">1864</span>
+<span class="normal">1865</span>
+<span class="normal">1866</span>
+<span class="normal">1867</span>
+<span class="normal">1868</span>
+<span class="normal">1869</span>
+<span class="normal">1870</span>
+<span class="normal">1871</span>
+<span class="normal">1872</span>
+<span class="normal">1873</span>
+<span class="normal">1874</span>
+<span class="normal">1875</span>
+<span class="normal">1876</span>
+<span class="normal">1877</span>
+<span class="normal">1878</span>
+<span class="normal">1879</span>
+<span class="normal">1880</span>
+<span class="normal">1881</span>
+<span class="normal">1882</span>
+<span class="normal">1883</span>
+<span class="normal">1884</span>
+<span class="normal">1885</span>
+<span class="normal">1886</span>
+<span class="normal">1887</span>
+<span class="normal">1888</span>
+<span class="normal">1889</span>
+<span class="normal">1890</span>
+<span class="normal">1891</span>
+<span class="normal">1892</span>
+<span class="normal">1893</span>
+<span class="normal">1894</span>
+<span class="normal">1895</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SphereCrop</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop a point cloud to a fixed number of points using a spherical region.</span>
+
+<span class="sd">    This transform expects a dictionary containing:</span>
+
+<span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
+<span class="sd">    * Optionally other per-point arrays (e.g., `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`) that have length N along the first dimension.</span>
+
+<span class="sd">    The target number of points can be controlled either by an absolute cap (`point_max`) or a relative rate (`sample_rate`):</span>
+
+<span class="sd">    * If `sample_rate` is not ``None``, the effective maximum is `point_max_eff = int(sample_rate * N)`.</span>
+<span class="sd">    * Otherwise, the fixed `point_max` value is used.</span>
+
+<span class="sd">    The center of the crop is chosen according to `mode`:</span>
+
+<span class="sd">    * `&quot;random&quot;`: use a randomly selected point as center.</span>
+<span class="sd">    * `&quot;center&quot;`: use the point at index `N // 2` as center (e.g., middle in</span>
+<span class="sd">      the current ordering).</span>
+
+<span class="sd">    If `N &lt;= point_max_eff`, no cropping is applied.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        point_max (int, optional):</span>
+<span class="sd">            Maximum number of points to keep if`sample_rate` is ``None``.</span>
+<span class="sd">            Defaults to 80,000.</span>
+<span class="sd">        sample_rate (float | None, optional):</span>
+<span class="sd">            If provided, the effective maximum number of points is computed as:</span>
+
+<span class="sd">                point_max_eff = int(sample_rate * N)</span>
+
+<span class="sd">            where `N` is the current number of points. This allows dataset-dependent cropping. If ``None``, the fixed `point_max`</span>
+<span class="sd">            is used instead.</span>
+<span class="sd">            Defaults to ``None``.</span>
+<span class="sd">        mode (str, optional):</span>
+<span class="sd">            Strategy to select the crop center. Must be `&quot;random&quot;` or `&quot;center&quot;`.</span>
+
+<span class="sd">            * `&quot;random&quot;`: center is a random point from `&quot;coord&quot;`.</span>
+<span class="sd">            * `&quot;center&quot;`: center is `coord[N // 2]`.</span>
+
+<span class="sd">            Defaults to `&quot;random&quot;`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_max</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80000</span><span class="p">,</span> <span class="n">sample_rate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">point_max</span> <span class="o">=</span> <span class="n">point_max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">=</span> <span class="n">sample_rate</span>
+        <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply spherical cropping to the `&quot;coord&quot;` entry in `data_dict`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_dict (dict): Input dictionary that must contain a `&quot;coord&quot;` key with a NumPy array of shape (N, 3).</span>
+<span class="sd">                Any other entry whose value is a NumPy array or `Sequence` of length N and whose key does not contain</span>
+<span class="sd">                `&quot;origin&quot;` will be permuted with the same shuffle indices.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes cropped to at most `point_max_eff`</span>
+<span class="sd">            points, if applied.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">point_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">point_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_max</span>
+
+            <span class="c1"># mode is &quot;random&quot; or &quot;center&quot;</span>
+            <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">point_max</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                    <span class="n">center</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;center&quot;</span><span class="p">:</span>
+                    <span class="n">center</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">][</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">),</span> <span class="mi">1</span><span class="p">))[:</span> <span class="n">point_max</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
 
 
@@ -1366,6 +1939,77 @@ Any other entry whose value is a NumPy array or <code>Sequence</code> of length 
     </table>
 
 
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\augmentation_class.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1862</span>
+<span class="normal">1863</span>
+<span class="normal">1864</span>
+<span class="normal">1865</span>
+<span class="normal">1866</span>
+<span class="normal">1867</span>
+<span class="normal">1868</span>
+<span class="normal">1869</span>
+<span class="normal">1870</span>
+<span class="normal">1871</span>
+<span class="normal">1872</span>
+<span class="normal">1873</span>
+<span class="normal">1874</span>
+<span class="normal">1875</span>
+<span class="normal">1876</span>
+<span class="normal">1877</span>
+<span class="normal">1878</span>
+<span class="normal">1879</span>
+<span class="normal">1880</span>
+<span class="normal">1881</span>
+<span class="normal">1882</span>
+<span class="normal">1883</span>
+<span class="normal">1884</span>
+<span class="normal">1885</span>
+<span class="normal">1886</span>
+<span class="normal">1887</span>
+<span class="normal">1888</span>
+<span class="normal">1889</span>
+<span class="normal">1890</span>
+<span class="normal">1891</span>
+<span class="normal">1892</span>
+<span class="normal">1893</span>
+<span class="normal">1894</span>
+<span class="normal">1895</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply spherical cropping to the `&quot;coord&quot;` entry in `data_dict`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict (dict): Input dictionary that must contain a `&quot;coord&quot;` key with a NumPy array of shape (N, 3).</span>
+<span class="sd">            Any other entry whose value is a NumPy array or `Sequence` of length N and whose key does not contain</span>
+<span class="sd">            `&quot;origin&quot;` will be permuted with the same shuffle indices.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: The same dictionary with `&quot;coord&quot;` and aligned per-point attributes cropped to at most `point_max_eff`</span>
+<span class="sd">        points, if applied.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">point_max</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sample_rate</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">point_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_max</span>
+
+        <span class="c1"># mode is &quot;random&quot; or &quot;center&quot;</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">point_max</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;center&quot;</span><span class="p">:</span>
+                <span class="n">center</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">][</span><span class="n">n</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">center</span><span class="p">),</span> <span class="mi">1</span><span class="p">))[:</span> <span class="n">point_max</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">n</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
@@ -1573,6 +2217,487 @@ Defaults to False.</p>
 
 
 
+              <details class="mkdocstrings-source">
+                <summary>Source code in <code>src\augmentation_class.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2038</span>
+<span class="normal">2039</span>
+<span class="normal">2040</span>
+<span class="normal">2041</span>
+<span class="normal">2042</span>
+<span class="normal">2043</span>
+<span class="normal">2044</span>
+<span class="normal">2045</span>
+<span class="normal">2046</span>
+<span class="normal">2047</span>
+<span class="normal">2048</span>
+<span class="normal">2049</span>
+<span class="normal">2050</span>
+<span class="normal">2051</span>
+<span class="normal">2052</span>
+<span class="normal">2053</span>
+<span class="normal">2054</span>
+<span class="normal">2055</span>
+<span class="normal">2056</span>
+<span class="normal">2057</span>
+<span class="normal">2058</span>
+<span class="normal">2059</span>
+<span class="normal">2060</span>
+<span class="normal">2061</span>
+<span class="normal">2062</span>
+<span class="normal">2063</span>
+<span class="normal">2064</span>
+<span class="normal">2065</span>
+<span class="normal">2066</span>
+<span class="normal">2067</span>
+<span class="normal">2068</span>
+<span class="normal">2069</span>
+<span class="normal">2070</span>
+<span class="normal">2071</span>
+<span class="normal">2072</span>
+<span class="normal">2073</span>
+<span class="normal">2074</span>
+<span class="normal">2075</span>
+<span class="normal">2076</span>
+<span class="normal">2077</span>
+<span class="normal">2078</span>
+<span class="normal">2079</span>
+<span class="normal">2080</span>
+<span class="normal">2081</span>
+<span class="normal">2082</span>
+<span class="normal">2083</span>
+<span class="normal">2084</span>
+<span class="normal">2085</span>
+<span class="normal">2086</span>
+<span class="normal">2087</span>
+<span class="normal">2088</span>
+<span class="normal">2089</span>
+<span class="normal">2090</span>
+<span class="normal">2091</span>
+<span class="normal">2092</span>
+<span class="normal">2093</span>
+<span class="normal">2094</span>
+<span class="normal">2095</span>
+<span class="normal">2096</span>
+<span class="normal">2097</span>
+<span class="normal">2098</span>
+<span class="normal">2099</span>
+<span class="normal">2100</span>
+<span class="normal">2101</span>
+<span class="normal">2102</span>
+<span class="normal">2103</span>
+<span class="normal">2104</span>
+<span class="normal">2105</span>
+<span class="normal">2106</span>
+<span class="normal">2107</span>
+<span class="normal">2108</span>
+<span class="normal">2109</span>
+<span class="normal">2110</span>
+<span class="normal">2111</span>
+<span class="normal">2112</span>
+<span class="normal">2113</span>
+<span class="normal">2114</span>
+<span class="normal">2115</span>
+<span class="normal">2116</span>
+<span class="normal">2117</span>
+<span class="normal">2118</span>
+<span class="normal">2119</span>
+<span class="normal">2120</span>
+<span class="normal">2121</span>
+<span class="normal">2122</span>
+<span class="normal">2123</span>
+<span class="normal">2124</span>
+<span class="normal">2125</span>
+<span class="normal">2126</span>
+<span class="normal">2127</span>
+<span class="normal">2128</span>
+<span class="normal">2129</span>
+<span class="normal">2130</span>
+<span class="normal">2131</span>
+<span class="normal">2132</span>
+<span class="normal">2133</span>
+<span class="normal">2134</span>
+<span class="normal">2135</span>
+<span class="normal">2136</span>
+<span class="normal">2137</span>
+<span class="normal">2138</span>
+<span class="normal">2139</span>
+<span class="normal">2140</span>
+<span class="normal">2141</span>
+<span class="normal">2142</span>
+<span class="normal">2143</span>
+<span class="normal">2144</span>
+<span class="normal">2145</span>
+<span class="normal">2146</span>
+<span class="normal">2147</span>
+<span class="normal">2148</span>
+<span class="normal">2149</span>
+<span class="normal">2150</span>
+<span class="normal">2151</span>
+<span class="normal">2152</span>
+<span class="normal">2153</span>
+<span class="normal">2154</span>
+<span class="normal">2155</span>
+<span class="normal">2156</span>
+<span class="normal">2157</span>
+<span class="normal">2158</span>
+<span class="normal">2159</span>
+<span class="normal">2160</span>
+<span class="normal">2161</span>
+<span class="normal">2162</span>
+<span class="normal">2163</span>
+<span class="normal">2164</span>
+<span class="normal">2165</span>
+<span class="normal">2166</span>
+<span class="normal">2167</span>
+<span class="normal">2168</span>
+<span class="normal">2169</span>
+<span class="normal">2170</span>
+<span class="normal">2171</span>
+<span class="normal">2172</span>
+<span class="normal">2173</span>
+<span class="normal">2174</span>
+<span class="normal">2175</span>
+<span class="normal">2176</span>
+<span class="normal">2177</span>
+<span class="normal">2178</span>
+<span class="normal">2179</span>
+<span class="normal">2180</span>
+<span class="normal">2181</span>
+<span class="normal">2182</span>
+<span class="normal">2183</span>
+<span class="normal">2184</span>
+<span class="normal">2185</span>
+<span class="normal">2186</span>
+<span class="normal">2187</span>
+<span class="normal">2188</span>
+<span class="normal">2189</span>
+<span class="normal">2190</span>
+<span class="normal">2191</span>
+<span class="normal">2192</span>
+<span class="normal">2193</span>
+<span class="normal">2194</span>
+<span class="normal">2195</span>
+<span class="normal">2196</span>
+<span class="normal">2197</span>
+<span class="normal">2198</span>
+<span class="normal">2199</span>
+<span class="normal">2200</span>
+<span class="normal">2201</span>
+<span class="normal">2202</span>
+<span class="normal">2203</span>
+<span class="normal">2204</span>
+<span class="normal">2205</span>
+<span class="normal">2206</span>
+<span class="normal">2207</span>
+<span class="normal">2208</span>
+<span class="normal">2209</span>
+<span class="normal">2210</span>
+<span class="normal">2211</span>
+<span class="normal">2212</span>
+<span class="normal">2213</span>
+<span class="normal">2214</span>
+<span class="normal">2215</span>
+<span class="normal">2216</span>
+<span class="normal">2217</span>
+<span class="normal">2218</span>
+<span class="normal">2219</span>
+<span class="normal">2220</span>
+<span class="normal">2221</span>
+<span class="normal">2222</span>
+<span class="normal">2223</span>
+<span class="normal">2224</span>
+<span class="normal">2225</span>
+<span class="normal">2226</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span>
+<span class="normal">2231</span>
+<span class="normal">2232</span>
+<span class="normal">2233</span>
+<span class="normal">2234</span>
+<span class="normal">2235</span>
+<span class="normal">2236</span>
+<span class="normal">2237</span>
+<span class="normal">2238</span>
+<span class="normal">2239</span>
+<span class="normal">2240</span>
+<span class="normal">2241</span>
+<span class="normal">2242</span>
+<span class="normal">2243</span>
+<span class="normal">2244</span>
+<span class="normal">2245</span>
+<span class="normal">2246</span>
+<span class="normal">2247</span>
+<span class="normal">2248</span>
+<span class="normal">2249</span>
+<span class="normal">2250</span>
+<span class="normal">2251</span>
+<span class="normal">2252</span>
+<span class="normal">2253</span>
+<span class="normal">2254</span>
+<span class="normal">2255</span>
+<span class="normal">2256</span>
+<span class="normal">2257</span>
+<span class="normal">2258</span>
+<span class="normal">2259</span>
+<span class="normal">2260</span>
+<span class="normal">2261</span>
+<span class="normal">2262</span>
+<span class="normal">2263</span>
+<span class="normal">2264</span>
+<span class="normal">2265</span>
+<span class="normal">2266</span>
+<span class="normal">2267</span>
+<span class="normal">2268</span>
+<span class="normal">2269</span>
+<span class="normal">2270</span>
+<span class="normal">2271</span>
+<span class="normal">2272</span>
+<span class="normal">2273</span>
+<span class="normal">2274</span>
+<span class="normal">2275</span>
+<span class="normal">2276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">GridSample</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Grid-based voxelization and optional per-voxel sampling/pooling.</span>
+
+<span class="sd">    This transform expects a dictionary containing:</span>
+
+<span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
+<span class="sd">    * Optionally per-point attributes (e.g. `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`) that have length N along the first dimension.</span>
+
+<span class="sd">    It first normalizes coordinates by subtracting the global minimum so that all coordinates are non-negative,</span>
+<span class="sd">    then assigns each point to a 3D grid cell (voxel) either by:</span>
+
+<span class="sd">    * a fixed cell size (`grid_size`), or</span>
+<span class="sd">    * a fixed number of cells per axis (`grid_number`).</span>
+
+<span class="sd">    The per-point integer voxel index is stored in `&quot;grid_coord&quot;`.</span>
+
+<span class="sd">    Optionally, it can:</span>
+
+<span class="sd">    * Store per-point relative coordinates within each voxel in `&quot;relative_coord&quot;`, normalized to approximately `[-1, 1]` per axis.</span>
+
+<span class="sd">    * Perform voxel-level sampling/aggregation:</span>
+
+<span class="sd">      - `method=&quot;random&quot;`:</span>
+<span class="sd">        * `mode=&quot;train&quot;`: pick one random point per voxel.</span>
+<span class="sd">        * `mode=&quot;test&quot;`: generate up to `max_count` “views”, each view containing one point per voxel</span>
+<span class="sd">        (cycling through the points in each voxel). Returns a list of dictionaries.</span>
+
+<span class="sd">      - `method=&quot;mean&quot;`:</span>
+<span class="sd">        * Average features per voxel and replace `&quot;coord&quot;`, `&quot;norm&quot;`, `&quot;color&quot;` accordingly.</span>
+<span class="sd">        * For `&quot;label&quot;`:</span>
+<span class="sd">          - If integer dtype → take majority vote per voxel.</span>
+<span class="sd">          - Else → average values per voxel.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        grid_size (float, optional):</span>
+<span class="sd">            Fixed grid cell size along each axis when `grid_number` is ``None``. The</span>
+<span class="sd">            same size is used for x, y, z. Coordinates are voxelized as:</span>
+
+<span class="sd">                grid_coord = floor((coord - coord_min) / grid_size)</span>
+
+<span class="sd">            Defaults to 0.02.</span>
+<span class="sd">        grid_number (tuple[int] | None, optional):</span>
+<span class="sd">            If not ``None``, use a fixed number of cells per axis instead of a fixed size. In that case, the effective</span>
+<span class="sd">            grid size is computed as:</span>
+
+<span class="sd">                grid_size = coord_norm.max(axis=0) / grid_number</span>
+
+<span class="sd">            and voxel indices are clipped to `[0, grid_number-1]`.</span>
+<span class="sd">            Defaults to ``None``.</span>
+<span class="sd">        sampling (bool, optional):</span>
+<span class="sd">            Whether to perform per-voxel sampling or pooling. If False, the transform only computes `&quot;grid_coord&quot;`</span>
+<span class="sd">            (and `&quot;relative_coord&quot;` if `return_relative=True`) and does not change the number of points.</span>
+<span class="sd">            Defaults to True.</span>
+<span class="sd">        method (str, optional):</span>
+<span class="sd">            Sampling/pooling strategy when `sampling=True`. Supported values:</span>
+
+<span class="sd">            * `&quot;random&quot;`: per-voxel random selection.</span>
+<span class="sd">            * `&quot;mean&quot;`: per-voxel averaging of features (and label fusion).</span>
+
+<span class="sd">            Defaults to `&quot;random&quot;`.</span>
+<span class="sd">        return_relative (bool, optional):</span>
+<span class="sd">            If True, adds `&quot;relative_coord&quot;` to `data_dict`, containing per-point offsets relative to the voxel center,</span>
+<span class="sd">            normalized to approximately `[-1, 1]` per axis.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        mode (str, optional):</span>
+<span class="sd">            Behavior mode for `method=&quot;random&quot;`.</span>
+<span class="sd">            * `&quot;train&quot;`: returns a single dictionary, selecting one random point per voxel.</span>
+<span class="sd">            * `&quot;test&quot;`: returns a list of dictionaries, each containing one point per voxel, cycling through all points within each voxel.</span>
+
+<span class="sd">            Defaults to `&quot;train&quot;`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid_size</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">grid_number</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sampling</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="n">return_relative</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;train&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_number</span> <span class="o">=</span> <span class="n">grid_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span> <span class="o">=</span> <span class="n">grid_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sampling</span> <span class="o">=</span> <span class="n">sampling</span>
+        <span class="k">assert</span> <span class="n">method</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">,</span> <span class="s2">&quot;mean&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">return_relative</span> <span class="o">=</span> <span class="n">return_relative</span>
+        <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_ravel_3d</span><span class="p">(</span><span class="n">arr_grid</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Convert 3D integer grid coordinates to a 1D key via row-major flattening.</span>
+
+<span class="sd">        Given integer grid coordinates of shape (N, 3), this computes a unique 1D key for each voxel coordinate</span>
+<span class="sd">        such that points in the same voxel share the same key. This is used for grouping points by voxel</span>
+<span class="sd">        (e.g. for random voxel-wise sampling).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            arr_grid (np.ndarray): Integer grid coordinates of shape (N, 3).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            np.ndarray: 1D array of length N containing raveled voxel keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">arr_grid</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">arr_grid</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
+        <span class="n">max_grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">arr_grid</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="n">arr_grid</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">arr_grid</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">arr_grid</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">max_grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">max_grid</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">keys</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply grid voxelization and optional voxel-wise sampling/pooling.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">            data_dict (dict): Input dictionary that must contain `&quot;coord&quot;`.</span>
+<span class="sd">                Optionally `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`, etc.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict | list[dict]:</span>
+<span class="sd">                * If `sampling=False` or `method=&quot;mean&quot;` or `mode=&quot;train&quot;`:</span>
+<span class="sd">                  returns a single modified `data_dict`.</span>
+<span class="sd">                * If `method=&quot;random&quot;` and `mode=&quot;test&quot;`: returns a list of dictionaries, each representing a</span>
+<span class="sd">                  different per-voxel sampling pass.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">coord</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]</span>
+            <span class="n">coord_min</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">coord</span> <span class="o">-</span> <span class="n">coord_min</span>
+            <span class="c1"># kill tiny negative noise due to FP</span>
+            <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># everything &lt; 0 → 0.0</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># fixed grid cell size</span>
+                <span class="n">grid_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span>
+                <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">coord_norm</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># fixed number of cells per axis</span>
+                <span class="n">grid_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_number</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+                <span class="n">grid_size</span> <span class="o">=</span> <span class="n">coord_norm</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">grid_number</span>
+                <span class="c1"># avoid division by zero in degenerate dims</span>
+                <span class="n">grid_size</span><span class="p">[</span><span class="n">grid_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
+                <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">coord_norm</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+                <span class="c1"># floor() would give integers in [0, grid_number-1] except when coord_norm == max, you get exactly grid_number.</span>
+                <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="n">grid_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;grid_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_coord</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_relative</span><span class="p">:</span>
+                <span class="n">grid_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">grid_coord</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">grid_size</span>
+                <span class="c1"># normalized to -1, 1 range</span>
+                <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;relative_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">coord_norm</span> <span class="o">-</span> <span class="n">grid_center</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">data_dict</span>
+
+            <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ravel_3d</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">)</span>
+                <span class="n">idx_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>  <span class="c1"># [min_key_index, ... max_key_index]</span>
+                <span class="n">key_sort</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">idx_sort</span><span class="p">]</span>
+                <span class="n">unique_keys</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">key_sort</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span>
+                    <span class="c1"># idx_select = np.cumsum(np.insert(count, 0, 0)[0:-1]) + np.random.randint(0, count.max(),</span>
+                    <span class="c1">#                                                                          count.size) % count</span>
+
+                    <span class="c1"># TRAIN: pick 1 random point per voxel</span>
+                    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="c1"># one random offset in [0, count_i) per voxel</span>
+                    <span class="n">rand_offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">size</span><span class="o">=</span><span class="n">count</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">%</span> <span class="n">count</span>
+                    <span class="n">idx_select</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">+</span> <span class="n">rand_offsets</span>  <span class="c1"># indices into sorted list</span>
+
+                    <span class="n">idx_unique</span> <span class="o">=</span> <span class="n">idx_sort</span><span class="p">[</span><span class="n">idx_select</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                            <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx_unique</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data_part_list</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="n">max_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+                    <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_count</span><span class="p">):</span>
+                        <span class="n">idx_select</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">count</span><span class="p">)</span>
+                        <span class="n">idx_unique</span> <span class="o">=</span> <span class="n">idx_sort</span><span class="p">[</span><span class="n">idx_select</span><span class="p">]</span>
+
+                        <span class="n">data_part</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">origin_index</span><span class="o">=</span><span class="n">idx_unique</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                                <span class="n">data_part</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx_unique</span><span class="p">]</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">data_part</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                        <span class="n">data_part_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_part</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">data_part_list</span>
+
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+                <span class="n">unique_keys</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">unique_sizes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_keys</span><span class="p">)</span>
+
+                <span class="c1"># ----- combine features along feature dimension -----</span>
+                <span class="n">feat_parts</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">feat_slices</span> <span class="o">=</span> <span class="p">{}</span>   <span class="c1"># record where each feature lives in combined vector</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+                        <span class="n">dim</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="n">feat_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+                        <span class="n">feat_slices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">dim</span><span class="p">)</span>
+                        <span class="n">start</span> <span class="o">+=</span> <span class="n">dim</span>
+                <span class="k">if</span> <span class="n">feat_parts</span><span class="p">:</span>
+                    <span class="n">combined_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">feat_parts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                    <span class="n">sum_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">combined_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">combined_feat</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">sum_feat</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">combined_feat</span><span class="p">)</span>
+                    <span class="n">avg_feat</span> <span class="o">=</span> <span class="n">sum_feat</span> <span class="o">/</span> <span class="n">count</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+
+                    <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;grid_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_keys</span>
+                    <span class="c1"># ----- write back per feature -----</span>
+                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">feat_slices</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_feat</span><span class="p">[:,</span> <span class="n">feat_slices</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+
+                <span class="k">if</span> <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="n">N</span><span class="p">:</span>
+                    <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+                        <span class="c1"># treat as classification</span>
+                        <span class="n">num_classes_tmp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+                        <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">num_classes_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">hist</span><span class="p">,</span> <span class="p">(</span><span class="n">inverse</span><span class="p">,</span> <span class="n">labels</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># (inverse, labels) is the 2D index for the hist</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># treat as regression</span>
+                        <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+                        <span class="n">sum_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                        <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">sum_label</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+                        <span class="n">avg_label</span> <span class="o">=</span> <span class="n">sum_label</span> <span class="o">/</span> <span class="n">count</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+                        <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">avg_label</span> <span class="o">=</span> <span class="n">avg_label</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_label</span>
+
+        <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
 
 
@@ -1660,6 +2785,279 @@ Optionally <code>"norm"</code>, <code>"color"</code>, <code>"label"</code>, etc.
     </table>
 
 
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>src\augmentation_class.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2142</span>
+<span class="normal">2143</span>
+<span class="normal">2144</span>
+<span class="normal">2145</span>
+<span class="normal">2146</span>
+<span class="normal">2147</span>
+<span class="normal">2148</span>
+<span class="normal">2149</span>
+<span class="normal">2150</span>
+<span class="normal">2151</span>
+<span class="normal">2152</span>
+<span class="normal">2153</span>
+<span class="normal">2154</span>
+<span class="normal">2155</span>
+<span class="normal">2156</span>
+<span class="normal">2157</span>
+<span class="normal">2158</span>
+<span class="normal">2159</span>
+<span class="normal">2160</span>
+<span class="normal">2161</span>
+<span class="normal">2162</span>
+<span class="normal">2163</span>
+<span class="normal">2164</span>
+<span class="normal">2165</span>
+<span class="normal">2166</span>
+<span class="normal">2167</span>
+<span class="normal">2168</span>
+<span class="normal">2169</span>
+<span class="normal">2170</span>
+<span class="normal">2171</span>
+<span class="normal">2172</span>
+<span class="normal">2173</span>
+<span class="normal">2174</span>
+<span class="normal">2175</span>
+<span class="normal">2176</span>
+<span class="normal">2177</span>
+<span class="normal">2178</span>
+<span class="normal">2179</span>
+<span class="normal">2180</span>
+<span class="normal">2181</span>
+<span class="normal">2182</span>
+<span class="normal">2183</span>
+<span class="normal">2184</span>
+<span class="normal">2185</span>
+<span class="normal">2186</span>
+<span class="normal">2187</span>
+<span class="normal">2188</span>
+<span class="normal">2189</span>
+<span class="normal">2190</span>
+<span class="normal">2191</span>
+<span class="normal">2192</span>
+<span class="normal">2193</span>
+<span class="normal">2194</span>
+<span class="normal">2195</span>
+<span class="normal">2196</span>
+<span class="normal">2197</span>
+<span class="normal">2198</span>
+<span class="normal">2199</span>
+<span class="normal">2200</span>
+<span class="normal">2201</span>
+<span class="normal">2202</span>
+<span class="normal">2203</span>
+<span class="normal">2204</span>
+<span class="normal">2205</span>
+<span class="normal">2206</span>
+<span class="normal">2207</span>
+<span class="normal">2208</span>
+<span class="normal">2209</span>
+<span class="normal">2210</span>
+<span class="normal">2211</span>
+<span class="normal">2212</span>
+<span class="normal">2213</span>
+<span class="normal">2214</span>
+<span class="normal">2215</span>
+<span class="normal">2216</span>
+<span class="normal">2217</span>
+<span class="normal">2218</span>
+<span class="normal">2219</span>
+<span class="normal">2220</span>
+<span class="normal">2221</span>
+<span class="normal">2222</span>
+<span class="normal">2223</span>
+<span class="normal">2224</span>
+<span class="normal">2225</span>
+<span class="normal">2226</span>
+<span class="normal">2227</span>
+<span class="normal">2228</span>
+<span class="normal">2229</span>
+<span class="normal">2230</span>
+<span class="normal">2231</span>
+<span class="normal">2232</span>
+<span class="normal">2233</span>
+<span class="normal">2234</span>
+<span class="normal">2235</span>
+<span class="normal">2236</span>
+<span class="normal">2237</span>
+<span class="normal">2238</span>
+<span class="normal">2239</span>
+<span class="normal">2240</span>
+<span class="normal">2241</span>
+<span class="normal">2242</span>
+<span class="normal">2243</span>
+<span class="normal">2244</span>
+<span class="normal">2245</span>
+<span class="normal">2246</span>
+<span class="normal">2247</span>
+<span class="normal">2248</span>
+<span class="normal">2249</span>
+<span class="normal">2250</span>
+<span class="normal">2251</span>
+<span class="normal">2252</span>
+<span class="normal">2253</span>
+<span class="normal">2254</span>
+<span class="normal">2255</span>
+<span class="normal">2256</span>
+<span class="normal">2257</span>
+<span class="normal">2258</span>
+<span class="normal">2259</span>
+<span class="normal">2260</span>
+<span class="normal">2261</span>
+<span class="normal">2262</span>
+<span class="normal">2263</span>
+<span class="normal">2264</span>
+<span class="normal">2265</span>
+<span class="normal">2266</span>
+<span class="normal">2267</span>
+<span class="normal">2268</span>
+<span class="normal">2269</span>
+<span class="normal">2270</span>
+<span class="normal">2271</span>
+<span class="normal">2272</span>
+<span class="normal">2273</span>
+<span class="normal">2274</span>
+<span class="normal">2275</span>
+<span class="normal">2276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span> <span class="o">|</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply grid voxelization and optional voxel-wise sampling/pooling.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_dict (dict): Input dictionary that must contain `&quot;coord&quot;`.</span>
+<span class="sd">            Optionally `&quot;norm&quot;`, `&quot;color&quot;`, `&quot;label&quot;`, etc.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict | list[dict]:</span>
+<span class="sd">            * If `sampling=False` or `method=&quot;mean&quot;` or `mode=&quot;train&quot;`:</span>
+<span class="sd">              returns a single modified `data_dict`.</span>
+<span class="sd">            * If `method=&quot;random&quot;` and `mode=&quot;test&quot;`: returns a list of dictionaries, each representing a</span>
+<span class="sd">              different per-voxel sampling pass.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;coord&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="n">coord</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">]</span>
+        <span class="n">coord_min</span> <span class="o">=</span> <span class="n">coord</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">coord</span> <span class="o">-</span> <span class="n">coord_min</span>
+        <span class="c1"># kill tiny negative noise due to FP</span>
+        <span class="n">coord_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">coord_norm</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># everything &lt; 0 → 0.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_number</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># fixed grid cell size</span>
+            <span class="n">grid_size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grid_size</span>
+            <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">coord_norm</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># fixed number of cells per axis</span>
+            <span class="n">grid_number</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grid_number</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="n">grid_size</span> <span class="o">=</span> <span class="n">coord_norm</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">grid_number</span>
+            <span class="c1"># avoid division by zero in degenerate dims</span>
+            <span class="n">grid_size</span><span class="p">[</span><span class="n">grid_size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1e-6</span>
+
+            <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">coord_norm</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+            <span class="c1"># floor() would give integers in [0, grid_number-1] except when coord_norm == max, you get exactly grid_number.</span>
+            <span class="n">grid_coord</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">,</span> <span class="n">a_min</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">a_max</span><span class="o">=</span><span class="n">grid_number</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;grid_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">grid_coord</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">return_relative</span><span class="p">:</span>
+            <span class="n">grid_center</span> <span class="o">=</span> <span class="p">(</span><span class="n">grid_coord</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">grid_size</span>
+            <span class="c1"># normalized to -1, 1 range</span>
+            <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;relative_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">coord_norm</span> <span class="o">-</span> <span class="n">grid_center</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">/</span> <span class="n">grid_size</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sampling</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">data_dict</span>
+
+        <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ravel_3d</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">)</span>
+            <span class="n">idx_sort</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>  <span class="c1"># [min_key_index, ... max_key_index]</span>
+            <span class="n">key_sort</span> <span class="o">=</span> <span class="n">key</span><span class="p">[</span><span class="n">idx_sort</span><span class="p">]</span>
+            <span class="n">unique_keys</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">key_sort</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">!=</span> <span class="s2">&quot;test&quot;</span><span class="p">:</span>
+                <span class="c1"># idx_select = np.cumsum(np.insert(count, 0, 0)[0:-1]) + np.random.randint(0, count.max(),</span>
+                <span class="c1">#                                                                          count.size) % count</span>
+
+                <span class="c1"># TRAIN: pick 1 random point per voxel</span>
+                <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="c1"># one random offset in [0, count_i) per voxel</span>
+                <span class="n">rand_offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">count</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">size</span><span class="o">=</span><span class="n">count</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="o">%</span> <span class="n">count</span>
+                <span class="n">idx_select</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">+</span> <span class="n">rand_offsets</span>  <span class="c1"># indices into sorted list</span>
+
+                <span class="n">idx_unique</span> <span class="o">=</span> <span class="n">idx_sort</span><span class="p">[</span><span class="n">idx_select</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                        <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx_unique</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">data_part_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">max_count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+                <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">count</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_count</span><span class="p">):</span>
+                    <span class="n">idx_select</span> <span class="o">=</span> <span class="n">offsets</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">%</span> <span class="n">count</span><span class="p">)</span>
+                    <span class="n">idx_unique</span> <span class="o">=</span> <span class="n">idx_sort</span><span class="p">[</span><span class="n">idx_select</span><span class="p">]</span>
+
+                    <span class="n">data_part</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">origin_index</span><span class="o">=</span><span class="n">idx_unique</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">N</span> <span class="ow">and</span> <span class="s2">&quot;origin&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">:</span>
+                            <span class="n">data_part</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">idx_unique</span><span class="p">]</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">data_part</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="n">data_part_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data_part</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">data_part_list</span>
+
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="n">unique_keys</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">grid_coord</span><span class="p">,</span> <span class="n">return_inverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">unique_sizes</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">unique_keys</span><span class="p">)</span>
+
+            <span class="c1"># ----- combine features along feature dimension -----</span>
+            <span class="n">feat_parts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">feat_slices</span> <span class="o">=</span> <span class="p">{}</span>   <span class="c1"># record where each feature lives in combined vector</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;coord&quot;</span><span class="p">,</span> <span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="p">:</span>
+                    <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+                    <span class="n">dim</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">feat_parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+                    <span class="n">feat_slices</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">dim</span><span class="p">)</span>
+                    <span class="n">start</span> <span class="o">+=</span> <span class="n">dim</span>
+            <span class="k">if</span> <span class="n">feat_parts</span><span class="p">:</span>
+                <span class="n">combined_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">feat_parts</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="n">sum_feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">combined_feat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">combined_feat</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">sum_feat</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">combined_feat</span><span class="p">)</span>
+                <span class="n">avg_feat</span> <span class="o">=</span> <span class="n">sum_feat</span> <span class="o">/</span> <span class="n">count</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+
+
+                <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;grid_coord&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">unique_keys</span>
+                <span class="c1"># ----- write back per feature -----</span>
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">feat_slices</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_feat</span><span class="p">[:,</span> <span class="n">feat_slices</span><span class="p">[</span><span class="n">key</span><span class="p">]]</span>
+
+            <span class="k">if</span> <span class="s2">&quot;label&quot;</span> <span class="ow">in</span> <span class="n">data_dict</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="n">N</span><span class="p">:</span>
+                <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">])</span>
+                <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">):</span>
+                    <span class="c1"># treat as classification</span>
+                    <span class="n">num_classes_tmp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">labels</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
+                    <span class="n">hist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">num_classes_tmp</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">hist</span><span class="p">,</span> <span class="p">(</span><span class="n">inverse</span><span class="p">,</span> <span class="n">labels</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># (inverse, labels) is the 2D index for the hist</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hist</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># treat as regression</span>
+                    <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">labels</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
+                    <span class="n">sum_label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">unique_sizes</span><span class="p">,</span> <span class="n">labels</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">sum_label</span><span class="p">,</span> <span class="n">inverse</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+                    <span class="n">avg_label</span> <span class="o">=</span> <span class="n">sum_label</span> <span class="o">/</span> <span class="n">count</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">labels</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">avg_label</span> <span class="o">=</span> <span class="n">avg_label</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+                    <span class="n">data_dict</span><span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">avg_label</span>
+
+    <span class="k">return</span> <span class="n">data_dict</span>
+</code></pre></div></td></tr></table></div>
+            </details>
     </div>
 
 </div>
