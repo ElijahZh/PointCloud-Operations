@@ -40,6 +40,7 @@ class NormalizeNormal:
     """Normalize normal vectors to unit length for a point cloud.
 
     This transform expects a dictionary containing:
+
     * `"coord"`: NumPy array of shape (N, 3) with point coordinates.
     """
     def __call__(self, data_dict: dict) -> dict:
