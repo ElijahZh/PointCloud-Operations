@@ -8,7 +8,7 @@ Classes for adding noise into point cloud
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Adding Outlier Noise**
 <p align="center">
@@ -22,7 +22,7 @@ Classes for adding noise into point cloud
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Adding Background Noise**
 <p align="center">
@@ -37,7 +37,7 @@ Classes for adding noise into point cloud
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Adding Noise**
 <p align="center">

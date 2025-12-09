@@ -8,7 +8,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 
 
@@ -18,7 +18,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Chromatic AutoContrast PC Colors**
 <p align="center">
@@ -33,7 +33,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Chromatic AutoContrast Percentage PC Colors**
 <p align="center">
@@ -48,7 +48,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Chromatic Translate PC Colors**
 <p align="center">
@@ -63,7 +63,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Chromatic Jitter PC Colors**
 <p align="center">
@@ -77,7 +77,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Transfer PC Colors into GrayScale**
 <p align="center">
@@ -91,7 +91,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Jitter PC Colors**
 <p align="center">
@@ -105,7 +105,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Hue Saturation Translation PC Colors**
 <p align="center">
@@ -119,7 +119,7 @@ Classes for point colors
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Augment PC Colors**
 <p align="center">

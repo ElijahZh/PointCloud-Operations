@@ -8,5 +8,5 @@ Classes for point normal
     options:
         show_root_heading: false
         show_root_toc_entry: false
-        show_source: False
+        show_source: True
         members: [__call__]   # <--- don't render __call__, __init__, etc.

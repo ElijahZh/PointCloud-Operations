@@ -8,7 +8,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]   # <--- don't render __init__, etc.
 **Normalize PC into Unit Sphere Space**
 <p align="center">
@@ -23,7 +23,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Positive Shift PC**
 <p align="center">
@@ -37,7 +37,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Center Shift PC**
 <p align="center">
@@ -51,7 +51,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Shift PC**
 <p align="center">
@@ -65,7 +65,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Rotate PC**
 <p align="center">
@@ -79,7 +79,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Scale PC**
 <p align="center">
@@ -93,7 +93,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Translate PC**
 <p align="center">
@@ -108,7 +108,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Jitter PC**
 <p align="center">
@@ -123,7 +123,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Flip PC**
 <p align="center">
@@ -137,7 +137,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Random Dropout PC**
 <p align="center">
@@ -152,7 +152,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 
 
@@ -162,7 +162,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Clip PC**
 <p align="center">
@@ -177,7 +177,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Clip Gaussian Jitter on PC**
 <p align="center">
@@ -192,7 +192,7 @@ Classes for point coordinates
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Elastic Distortion on PC**
 <p align="center">

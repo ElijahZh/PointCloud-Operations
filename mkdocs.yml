@@ -1,5 +1,7 @@
 site_name: Point Cloud Operations
 site_url: ""
+extra:
+  version: "0.0.1"
 
 theme:
   name: "material"

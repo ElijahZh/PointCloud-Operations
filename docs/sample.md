@@ -8,7 +8,7 @@ Classes for point cloud sampling
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **FPS PC with 4096 points**
 <p align="center">
@@ -22,7 +22,7 @@ Classes for point cloud sampling
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **FPS PC with surface area adjusted points**
 <p align="center">
@@ -36,7 +36,7 @@ Classes for point cloud sampling
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Sphere Crop PC**
 <p align="center">
@@ -51,7 +51,7 @@ Classes for point cloud sampling
     options:
         show_root_heading: False
         show_root_toc_entry: False
-        show_source: False
+        show_source: True
         members: [__call__]
 **Grid Sample on PC**
 
