@@ -649,8 +649,10 @@
 
 
         <p>Normalize normal vectors to unit length for a point cloud.</p>
-<p>This transform expects a dictionary containing:
-* <code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</p>
+<p>This transform expects a dictionary containing:</p>
+<ul>
+<li><code>"coord"</code>: NumPy array of shape (N, 3) with point coordinates.</li>
+</ul>
 
 
 
@@ -681,11 +683,13 @@
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">NormalizeNormal</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize normal vectors to unit length for a point cloud.</span>
 
 <span class="sd">    This transform expects a dictionary containing:</span>
+
 <span class="sd">    * `&quot;coord&quot;`: NumPy array of shape (N, 3) with point coordinates.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
@@ -760,8 +764,7 @@ Args:
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src\augmentation_class.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
-<span class="normal">46</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
@@ -773,7 +776,8 @@ Args:
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
-<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">58</span>
+<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalizes normal vectors to unit length.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        data_dict (dict): Input dictionary that must contain a &quot;norm&quot; key</span>

@@ -915,8 +915,7 @@ Defaults to 1.0.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src\augmentation_class.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2278</span>
-<span class="normal">2279</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2279</span>
 <span class="normal">2280</span>
 <span class="normal">2281</span>
 <span class="normal">2282</span>
@@ -1100,7 +1099,8 @@ Defaults to 1.0.</p>
 <span class="normal">2460</span>
 <span class="normal">2461</span>
 <span class="normal">2462</span>
-<span class="normal">2463</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="normal">2463</span>
+<span class="normal">2464</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AddOutlier</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add synthetic outlier points (and attributes) around a point cloud.</span>
 
@@ -1372,8 +1372,7 @@ Defaults to 1.0.</p>
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src\augmentation_class.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2376</span>
-<span class="normal">2377</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2377</span>
 <span class="normal">2378</span>
 <span class="normal">2379</span>
 <span class="normal">2380</span>
@@ -1459,7 +1458,8 @@ Defaults to 1.0.</p>
 <span class="normal">2460</span>
 <span class="normal">2461</span>
 <span class="normal">2462</span>
-<span class="normal">2463</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">2463</span>
+<span class="normal">2464</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add outlier points and update aligned per-point attributes.</span>
 
 <span class="sd">    Args:</span>
@@ -1757,8 +1757,7 @@ Defaults to 1.0.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src\augmentation_class.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2465</span>
-<span class="normal">2466</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2466</span>
 <span class="normal">2467</span>
 <span class="normal">2468</span>
 <span class="normal">2469</span>
@@ -1936,7 +1935,8 @@ Defaults to 1.0.</p>
 <span class="normal">2641</span>
 <span class="normal">2642</span>
 <span class="normal">2643</span>
-<span class="normal">2644</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="normal">2644</span>
+<span class="normal">2645</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AddBackgroundNoise</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add structured background noise patches around a point cloud.</span>
 
@@ -2213,8 +2213,7 @@ Any existing <code>"noise_index" &gt; 0</code> points are excluded when computin
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src\augmentation_class.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2541</span>
-<span class="normal">2542</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2542</span>
 <span class="normal">2543</span>
 <span class="normal">2544</span>
 <span class="normal">2545</span>
@@ -2316,7 +2315,8 @@ Any existing <code>"noise_index" &gt; 0</code> points are excluded when computin
 <span class="normal">2641</span>
 <span class="normal">2642</span>
 <span class="normal">2643</span>
-<span class="normal">2644</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">2644</span>
+<span class="normal">2645</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add background noise regions and update aligned per-point attributes.</span>
 
 <span class="sd">    Args:</span>
@@ -2714,8 +2714,7 @@ Defaults to 1.0.</p>
 
               <details class="mkdocstrings-source">
                 <summary>Source code in <code>src\augmentation_class.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2646</span>
-<span class="normal">2647</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2647</span>
 <span class="normal">2648</span>
 <span class="normal">2649</span>
 <span class="normal">2650</span>
@@ -3029,7 +3028,8 @@ Defaults to 1.0.</p>
 <span class="normal">2958</span>
 <span class="normal">2959</span>
 <span class="normal">2960</span>
-<span class="normal">2961</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
+<span class="normal">2961</span>
+<span class="normal">2962</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@TRANSFORMS</span><span class="o">.</span><span class="n">register</span><span class="p">()</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">AddNoise</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add local noise clusters around randomly chosen points.</span>
 
@@ -3432,8 +3432,7 @@ May also contain <code>"norm"</code>, <code>"color"</code>, and <code>"noise_ind
 
             <details class="mkdocstrings-source">
               <summary>Source code in <code>src\augmentation_class.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2762</span>
-<span class="normal">2763</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">2763</span>
 <span class="normal">2764</span>
 <span class="normal">2765</span>
 <span class="normal">2766</span>
@@ -3631,7 +3630,8 @@ May also contain <code>"norm"</code>, <code>"color"</code>, and <code>"noise_ind
 <span class="normal">2958</span>
 <span class="normal">2959</span>
 <span class="normal">2960</span>
-<span class="normal">2961</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="normal">2961</span>
+<span class="normal">2962</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply local noise cluster augmentation to a point cloud dictionary.</span>
 
 <span class="sd">    Args:</span>

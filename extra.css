@@ -52,3 +52,8 @@ h2#chromaticjitter, h2#randomcolorgrayscale, h2#randomcolorjitter, h2#huesaturat
 .md-typeset .doc.doc-object.doc-function > .doc-heading {
   font-size: .95rem;
 }
+
+/* Hide source blocks for methods / functions, keep them for classes */
+.doc.doc-object.doc-function details.mkdocstrings-source {
+  display: none;
+}
